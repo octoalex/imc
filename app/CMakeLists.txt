@@ -16,3 +16,4 @@
 # This directory exists with the purpose of adding all subdirectories
 
 add_subdirectory(imc)
+add_subdirectory(libimc)

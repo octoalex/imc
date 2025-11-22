@@ -13,22 +13,28 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# This directory contains the cli frontend of the app
+# This directory contains the launcher logic
 
-add_executable(imc)
+add_library(libimc)
 
-target_compile_features(imc PRIVATE c_std_23)
+target_compile_features(libimc PRIVATE c_std_23)
 
 target_sources(
-    imc
-
-    # both src files and headers are private
-    PRIVATE
-        src/main.c
+    libimc
 
     PRIVATE
-        FILE_SET HEADERS
+        src/linux/launch_process.c
+        src/test.c
+
+    PUBLIC
+        FILE_SET libimc_public_headers
+        TYPE HEADERS
+        BASE_DIRS public
+
+    PRIVATE
+        FILE_SET libimc_private_headers
+        TYPE HEADERS
         BASE_DIRS private
 )
 
-target_link_libraries(imc PRIVATE imc::libimc)
+add_library(imc::libimc ALIAS libimc)
