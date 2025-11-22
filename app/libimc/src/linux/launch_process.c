@@ -82,13 +82,18 @@ pid_t launch_process(const char *command[], const char *working_directory, FILE 
     return process;
 }
 
-int wait_process(const pid_t process) {
+int wait_process(pid_t process, bool *was_killed) {
     if (process <= 0) {
         return 0;
     }
-    int exit_code;
-    waitpid(process, &exit_code, 0);
-    return exit_code;
+
+    siginfo_t status;
+    waitid(P_PID, process, &status, WEXITED | WSTOPPED);
+
+    if (was_killed != nullptr) {
+        *was_killed = status.si_code != CLD_EXITED;
+    }
+    return status.si_status;
 }
 
 #endif

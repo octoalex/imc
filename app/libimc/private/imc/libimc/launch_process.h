@@ -28,8 +28,6 @@
 #   include <unistd.h>
 #elifdef _WIN32
 #   include <processthreadsapi.h>
-
-typedef DWORD pid_t;
 #endif
 
 constexpr pid_t PROCESS_ERROR_NULL_COMMAND = -1;
@@ -37,6 +35,12 @@ constexpr pid_t PROCESS_ERROR_PROGRAM_DOES_NOT_EXISTS = -2;
 constexpr pid_t PROCESS_ERROR_PROGRAM_CANNOT_BE_EXECUTED = -3;
 constexpr pid_t PROCESS_ERROR_WORKING_DIRECTORY_INVALID = -4;
 constexpr pid_t PROCESS_ERROR_CREATION_FAIL = -5;
+
+#ifdef _WIN32
+
+typedef DWORD pid_t;
+
+#endif
 
 /// Launches a process
 /// @param command The command to execute, including the arguments                                                  <br>
@@ -62,7 +66,9 @@ pid_t launch_process(const char *command[], const char *working_directory, FILE 
 /// Waits for the process to terminate, and returns its exit code
 /// @param process The process's PID                                                                                <br>
 ///   If the pid is an error value, then the function will return 0
+/// @param was_killed Whether the process exited normally (by the main returning or calling exit)                   <br>
+///   If null, then it will be ignored
 /// @return The process's exit code
-int wait_process(pid_t process);
+int wait_process(pid_t process, bool *was_killed);
 
 #endif //IMC_LAUNCH_PROCESS_H
