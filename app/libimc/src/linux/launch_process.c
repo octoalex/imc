@@ -77,7 +77,7 @@ pid_t launch_process(const char *command[], const char *working_directory, FILE 
             dup2(err_fileno, STDERR_FILENO);
         }
 
-        execv(*command, command);
+        execv(*command, (char * const*)command);
     }
     return process;
 }
