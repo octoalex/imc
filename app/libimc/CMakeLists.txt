@@ -17,6 +17,8 @@
 
 add_library(libimc)
 
+configure_file(public/imc/libimc/config.in.h public/imc/libimc/config.h)
+
 target_compile_features(libimc PRIVATE c_std_23)
 
 target_sources(
@@ -24,12 +26,11 @@ target_sources(
 
     PRIVATE
         src/linux/launch_process.c
-        src/test.c
 
     PUBLIC
         FILE_SET libimc_public_headers
         TYPE HEADERS
-        BASE_DIRS public
+        BASE_DIRS public "${CMAKE_CURRENT_BINARY_DIR}/public"
 
     PRIVATE
         FILE_SET libimc_private_headers
