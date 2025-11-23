@@ -96,4 +96,12 @@ int wait_process(pid_t process, bool *was_killed) {
     return status.si_status;
 }
 
+bool is_process_alive(pid_t process) {
+    if (process <= 0) {
+        return 0;
+    }
+
+    return kill(process, 0) == 0;
+}
+
 #endif

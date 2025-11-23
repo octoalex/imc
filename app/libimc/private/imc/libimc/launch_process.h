@@ -61,6 +61,7 @@ typedef DWORD pid_t;
 ///     - -3: Process is inaccessible, or cannot be executed
 ///     - -4: Working directory is not accessible
 ///     - -5: Process creation failed
+/// @bug On Linux, all the calling process's file descriptors are kept by the launched process
 pid_t launch_process(const char *command[], const char *working_directory, FILE *in, FILE *out, FILE *err);
 
 /// Waits for the process to terminate, and returns its exit code
@@ -70,5 +71,11 @@ pid_t launch_process(const char *command[], const char *working_directory, FILE 
 ///   If null, then it will be ignored
 /// @return The process's exit code
 int wait_process(pid_t process, bool *was_killed);
+
+/// Check if the process is still alife
+/// @param process The process's PID                                                                                <br>
+///   If the pid is an error value, then the function will return false
+/// @return Whether the process is still running
+bool is_process_alive(pid_t process);
 
 #endif //IMC_LAUNCH_PROCESS_H
