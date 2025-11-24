@@ -38,4 +38,9 @@ target_sources(
         BASE_DIRS private
 )
 
+target_link_libraries(
+        libimc
+        PRIVATE m
+)
+
 add_library(imc::libimc ALIAS libimc)

@@ -21,9 +21,15 @@
 
 #ifdef linux
 
+#include <dirent.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 #include <imc/libimc/launch_process.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+
+static void close_all_file_descriptors();
 
 pid_t launch_process(const char *command[], const char *working_directory, FILE *in, FILE *out, FILE *err) {
     // CHECKS
@@ -76,6 +82,10 @@ pid_t launch_process(const char *command[], const char *working_directory, FILE 
             const int err_fileno = fileno(err);
             dup2(err_fileno, STDERR_FILENO);
         }
+        // close all other file pointers
+        // closing them before copying them will lead to bugs!
+        // (there is a reason this was written here)
+        close_all_file_descriptors();
 
         execv(*command, (char * const*)command);
     }
@@ -102,6 +112,45 @@ bool is_process_alive(pid_t process) {
     }
 
     return kill(process, 0) == 0;
+}
+
+// Helpers
+
+static void close_all_file_descriptors() {
+    pid_t self_pid = getpid();
+    size_t path_size = 6 /* /proc/ */
+        + (int) ceil(log(self_pid + 1)) /* the pid's length in characters */
+        + 4 /* /fd/ */
+        + 1 /* the termination character */;
+
+    char fd_path[path_size];
+    sprintf(fd_path, "/proc/%d/fd/", self_pid);
+
+    struct dirent *entry;
+
+    // Code based on the one found at https://www.gnu.org/software/libc/manual/html_node/Simple-Directory-Lister.html
+    DIR* dp = opendir(fd_path);
+    if (dp != nullptr) {
+        while ((entry = readdir (dp))) {
+            char *error;
+            int fd = (int)strtol(entry->d_name, &error, 10);
+            // a simple fd < 3 could do, but I prefer this approach, as IMO it makes it clearer that I'm only checking
+            // for those fds
+            if (error == entry->d_name
+                || fd == STDIN_FILENO
+                || fd == STDOUT_FILENO
+                || fd == STDERR_FILENO
+                ) {
+                // either the file is not numeric, thus not an FD,
+                // or it's a reserved fd (stdin, stdout, stderr) and thus should not be closed
+                // thus, it's skipped
+                continue;
+            }
+            // close the fd
+            close(fd);
+        }
+        closedir(dp);
+    }
 }
 
 #endif
