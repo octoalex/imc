@@ -125,6 +125,10 @@ bool is_process_alive(const pid_t process) {
     return kill(process, 0) == 0;
 }
 
+bool kill_process(const pid_t process) {
+    return kill(process, SIGINT) == 0;
+}
+
 // Helpers
 
 static void close_all_file_descriptors() {

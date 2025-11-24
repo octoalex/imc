@@ -72,10 +72,15 @@ pid_t launch_process(const char *command[], const char *working_directory, FILE 
 /// @return The process's exit code
 int wait_process(pid_t process, bool *was_killed);
 
-/// Check if the process is still alife
+/// Check if the process is still alive
 /// @param process The process's PID                                                                                <br>
 ///   If the pid is an error value, then the function will return false
 /// @return Whether the process is still running
 bool is_process_alive(pid_t process);
+
+/// Forcefully terminates a process
+/// @param process The process
+/// @return True if successful, false if not
+bool kill_process(pid_t process);
 
 #endif //IMC_LAUNCH_PROCESS_H
