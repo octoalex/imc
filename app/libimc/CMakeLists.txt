@@ -22,26 +22,23 @@ configure_file(public/imc/libimc/config.in.h public/imc/libimc/config.h)
 target_compile_features(libimc PRIVATE c_std_23)
 
 target_sources(
-    libimc
+        libimc
 
-    PRIVATE
+        PRIVATE
         src/linux/launch_process.c
 
-    PUBLIC
+        PUBLIC
         FILE_SET libimc_public_headers
         TYPE HEADERS
         BASE_DIRS public "${CMAKE_CURRENT_BINARY_DIR}/public"
 
-    PRIVATE
+        PRIVATE
         FILE_SET libimc_private_headers
         TYPE HEADERS
         BASE_DIRS private
 )
 
-target_link_libraries(
-        libimc
-        PRIVATE m
-)
+target_link_libraries(libimc PRIVATE m)
 
 add_library(imc::libimc ALIAS libimc)
 

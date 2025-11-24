@@ -18,30 +18,7 @@ cmake_minimum_required(VERSION 3.23)
 project(imc VERSION 0.0.0)
 
 if(${BUILD_TESTING})
-    enable_testing()
-
-    function(create_basic_test test_target name sources command_args)
-        add_executable(${name})
-
-        target_compile_features(${name} PRIVATE c_std_23)
-
-        target_sources(
-            ${name}
-
-            PRIVATE ${sources}
-
-            PRIVATE
-                FILE_SET HEADERS
-                BASE_DIRS $<TARGET_PROPERTY:${test_target},INCLUDE_DIRECTORIES>
-        )
-
-        target_link_libraries(${name} PRIVATE ${test_target})
-
-        add_test(
-            NAME ${name}
-            COMMAND ${name} ${command_args}
-        )
-    endfunction()
+    include(cmake/test_functions.cmake)
 endif()
 
 add_subdirectory(app)
