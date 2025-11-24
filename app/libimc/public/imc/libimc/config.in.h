@@ -30,4 +30,6 @@ constexpr int VERSION_PATCH = @imc_VERSION_PATCH@;
 
 const char *const COMPILER_ID = "@CMAKE_C_COMPILER_ID@";
 
+const char *const SYSTEM_NAME = "@CMAKE_SYSTEM_NAME@";
+
 #endif //IMC_CONFIG_IN_H
