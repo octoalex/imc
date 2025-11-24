@@ -19,19 +19,27 @@
  * Created by octoalex on 23/11/2025.
  */
 
+#include <stdlib.h>
 #include <imc/libimc/launch_process.h>
 
-int main(int argc, const char *argv[]) {
+int main(const int argc, const char *argv[]) {
+    if (argc > 1) {
+        fprintf(stderr, "Incorrect number of arguments! Expected 0, got %d\n", argc - 1);
+        exit(-1);
+    }
+
     if (argc == 1) {
         // parent mode
         const char *command[] = {
             *argv,
+            // dummy necessary to trigger child mode
             "dummy argument",
             nullptr
         };
-        pid_t process = launch_process(command, nullptr, nullptr, nullptr, nullptr);
 
-        bool alive = is_process_alive(process);
+        const pid_t process = launch_process(command, nullptr, nullptr, nullptr, nullptr);
+
+        const bool alive = is_process_alive(process);
 
         // wait for process natural termination
         bool was_killed;
@@ -42,11 +50,11 @@ int main(int argc, const char *argv[]) {
             return -1;
         }
 
-        bool dead = is_process_alive(process);
+        const bool dead = is_process_alive(process);
 
+        // check that when the child was supposed to be alive, it was, and then when it was supposed to be dead, it was
         return alive && !dead ? 0 : -1;
     } else {
-        usleep(1'000);
         return 0;
     }
 }

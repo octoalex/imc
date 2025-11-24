@@ -20,14 +20,13 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <imc/libimc/launch_process.h>
 
 constexpr int RANDOM_MAX_VALUE = 99;
 constexpr int RANDOM_MIN_VALUE = 10;
 
-int main(int argc, const char *argv[]) {
+int main(const int argc, const char *argv[]) {
     if (argc > 2) {
         fprintf(stderr, "Incorrect number of arguments! Expected 0 or 1, got %d\n", argc - 1);
         exit(-1);

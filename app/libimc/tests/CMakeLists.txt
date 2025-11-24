@@ -13,13 +13,19 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+# This tests basic launch_process and wait_process functionality
 add_test_executable(imc::libimc base_launch_process base_launch_process.test.c)
-add_test_executable(imc::libimc alive_launch_process alive_launch_process.test.c)
-add_test_executable(imc::libimc file_descriptor_launch_process file_descriptor_launch_process.test.c)
-add_test_executable(imc::libimc pipe_launch_process pipe_launch_process.test.c)
-
 add_test(NAME base_launch_process COMMAND base_launch_process)
+
+# This tests is_process_alive functionality
+add_test_executable(imc::libimc alive_launch_process alive_launch_process.test.c)
 add_test(NAME alive_launch_process COMMAND alive_launch_process)
+
+# This tests if file descriptors are inherited by launched processes
+add_test_executable(imc::libimc file_descriptor_launch_process file_descriptor_launch_process.test.c)
 add_test(NAME file_descriptor_launch_process COMMAND file_descriptor_launch_process)
+
+# This tests setting custom STDIN, STDOUT and STDERR
+add_test_executable(imc::libimc pipe_launch_process pipe_launch_process.test.c)
 add_test(NAME pipe_launch_process COMMAND pipe_launch_process)
 set_tests_properties(pipe_launch_process PROPERTIES TIMEOUT 3)

@@ -23,20 +23,27 @@
 #include <time.h>
 #include <imc/libimc/launch_process.h>
 
+// simple strings
 const char *const IN_STRING = "This is an input";
 const char *const OUT_STRING = "This is an output";
 const char *const ERR_STRING = "This is an error";
 
+// by using a fixed size number, conversion to string won't cause any problems
 constexpr int RANDOM_MAX_VALUE = 999;
 constexpr int RANDOM_MIN_VALUE = 100;
 
-constexpr size_t IO_BUFFER_SIZE = 1024;
+constexpr size_t IO_BUFFER_SIZE = 32;
 
-int main(int argc, const char *argv[]) {
+int main(const int argc, const char *argv[]) {
+    if (argc > 2) {
+        fprintf(stderr, "Incorrect number of arguments! Expected 0 or 1, got %d\n", argc - 1);
+        exit(-1);
+    }
 
     if (argc == 1) {
-
         // parent mode
+
+        // create pipes
         int in_pipe[2];
         int out_pipe[2];
         int err_pipe[2];
@@ -48,6 +55,7 @@ int main(int argc, const char *argv[]) {
         FILE *in_child = fdopen(in_pipe[0], "r");
         FILE *in_parent = fdopen(in_pipe[1], "w");
 
+        // Here's the fix discussed later down
         // by default, it seems like the file is opened in full buffer mode (unclear why), so it has to be manually set
         // here to buffer by line
         char *buffer = calloc(IO_BUFFER_SIZE, sizeof(char));
@@ -62,10 +70,10 @@ int main(int argc, const char *argv[]) {
         FILE *err_parent = fdopen(err_pipe[0], "r");
 
         // generation of 2 randoms
+        // srand will do, there's no issue with using a low security random, because this isn't tied to security
         srand(time(nullptr));
         const int random1 = rand() % (RANDOM_MAX_VALUE - RANDOM_MIN_VALUE + 1) + RANDOM_MIN_VALUE;
         const int random2 = rand() % (RANDOM_MAX_VALUE - RANDOM_MIN_VALUE + 1) + RANDOM_MIN_VALUE;
-
 
         char random1_string[4] = { };
         sprintf(random1_string, "%d", random1);
@@ -76,7 +84,7 @@ int main(int argc, const char *argv[]) {
             nullptr
         };
 
-        pid_t process = launch_process(command, nullptr, in_child, out_child, err_child);
+        const pid_t process = launch_process(command, nullptr, in_child, out_child, err_child);
 
         // now that we've passed the files to the child process, they can be closed
         fclose(in_child);
@@ -86,12 +94,6 @@ int main(int argc, const char *argv[]) {
         // 1. simulate input
         fprintf(in_parent, "%d\n\n", random2);
         // FIXED: issue caused because standard file buffering behavior was full instead of line
-        // without this fflush, it will block
-        // don't ask me why
-        // maybe it could be related to the fact that the file is open on the other side? would be good to know
-        // update: not because of that
-        // fflush(in_parent);
-
 
         // 2. get that input echoed back
         int echoed;
@@ -106,6 +108,7 @@ int main(int argc, const char *argv[]) {
         wait_process(process, &was_killed);
 
         free(buffer);
+        // setting to null for good practice
         buffer = nullptr;
 
         if (was_killed) {
@@ -134,7 +137,6 @@ int main(int argc, const char *argv[]) {
         fprintf(stderr, "%s\n", argv[1]);
 
         // done, return 0
-
         return 0;
     }
 }

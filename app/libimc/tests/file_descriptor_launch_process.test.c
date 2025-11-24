@@ -29,7 +29,12 @@
 
 constexpr int BUFFER_SIZE = 16;
 
-int main(int argc, const char *argv[]) {
+int main(const int argc, const char *argv[]) {
+    if (argc != 1 && argc != 3) {
+        fprintf(stderr, "Incorrect number of arguments! Expected 0 or 2, got %d\n", argc - 1);
+        exit(-1);
+    }
+
     if (argc == 1) {
 
         int parent_pipe[2];
@@ -37,10 +42,10 @@ int main(int argc, const char *argv[]) {
 
         char read_fd[BUFFER_SIZE];
         char write_fd[BUFFER_SIZE];
+
         sprintf(read_fd, "%d", parent_pipe[0]);
         sprintf(write_fd, "%d", parent_pipe[1]);
-        printf("Sending file descriptors [%d] and [%d]\n", parent_pipe[0], parent_pipe[1]);
-
+        // send the file descriptors, so the child can check if they're open
         const char *command[] = {
             *argv,
             read_fd,
@@ -48,23 +53,26 @@ int main(int argc, const char *argv[]) {
             nullptr
         };
 
-        pid_t process = launch_process(command, nullptr, nullptr, stdout, nullptr);
+        const pid_t process = launch_process(command, nullptr, nullptr, stdout, nullptr);
 
-        int exit = wait_process(process, nullptr);
+        const int exit = wait_process(process, nullptr);
 
+        // close files for good measure
         close(parent_pipe[0]);
         close(parent_pipe[1]);
 
-        return exit;
+        // if the child still had those files open, exit will be true (1 in other words), so the test shall return
+        // non-zero
+        // if the child didn't have those files open, exit will be false (0), so the test shall return 0
+        return -exit;
 
-    } else if (argc == 3) {
+    } else {
         // child mode
-        int read_fd = (int)strtol(argv[1], nullptr, 10);
-        int write_fd = (int)strtol(argv[2], nullptr, 10);
-        printf("Received file descriptors [%d] and [%d]\n", read_fd, write_fd);
+        const int read_fd = (int)strtol(argv[1], nullptr, 10);
+        const int write_fd = (int)strtol(argv[2], nullptr, 10);
 
         struct stat st;
+        // check if either of the files are open, and return true if either is
         return fstat(read_fd, &st) != -1 || fstat(write_fd, &st) != -1;
     }
-    return -1;
 }
