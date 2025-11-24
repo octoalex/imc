@@ -126,6 +126,11 @@ bool is_process_alive(const pid_t process) {
 }
 
 bool kill_process(const pid_t process) {
+    // checks that the pid is valid
+    if (process <= 0) {
+        return false;
+    }
+
     return kill(process, SIGINT) == 0;
 }
 
