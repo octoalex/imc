@@ -33,3 +33,7 @@ set_tests_properties(pipe_launch_process PROPERTIES TIMEOUT 3)
 # This tests changing the working directory
 add_test_executable(imc::libimc working_dir_launch_process working_dir_launch_process.test.c)
 add_test(NAME working_dir_launch_process COMMAND working_dir_launch_process ${CMAKE_SOURCE_DIR})
+
+# This tests killing a process
+add_test_executable(imc::libimc kill_launch_process kill_launch_process.test.c)
+add_test(NAME kill_launch_process COMMAND kill_launch_process)
