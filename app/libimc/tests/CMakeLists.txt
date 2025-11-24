@@ -14,26 +14,28 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # This tests basic launch_process and wait_process functionality
-add_test_executable(imc::libimc base_launch_process base_launch_process.test.c)
-add_test(NAME base_launch_process COMMAND base_launch_process)
+add_test_executable(imc::libimc base_process launch_process/base_process.test.c)
+add_test(NAME base_process COMMAND base_process)
 
 # This tests is_process_alive functionality
-add_test_executable(imc::libimc alive_launch_process alive_launch_process.test.c)
-add_test(NAME alive_launch_process COMMAND alive_launch_process)
+add_test_executable(imc::libimc is_process_alive launch_process/is_process_alive.test.c)
+add_test(NAME is_process_alive COMMAND is_process_alive)
 
 # This tests if file descriptors are inherited by launched processes
-add_test_executable(imc::libimc file_descriptor_launch_process file_descriptor_launch_process.test.c)
-add_test(NAME file_descriptor_launch_process COMMAND file_descriptor_launch_process)
+add_test_executable(
+        imc::libimc process_file_descriptor_inheritance launch_process/process_file_descriptor_inheritance.test.c
+)
+add_test(NAME process_file_descriptor_inheritance COMMAND process_file_descriptor_inheritance)
 
 # This tests setting custom STDIN, STDOUT and STDERR
-add_test_executable(imc::libimc pipe_launch_process pipe_launch_process.test.c)
-add_test(NAME pipe_launch_process COMMAND pipe_launch_process)
-set_tests_properties(pipe_launch_process PROPERTIES TIMEOUT 3)
+add_test_executable(imc::libimc pipe_process_communication launch_process/pipe_process_communication.test.c)
+add_test(NAME pipe_process_communication COMMAND pipe_process_communication)
+set_tests_properties(pipe_process_communication PROPERTIES TIMEOUT 3)
 
 # This tests changing the working directory
-add_test_executable(imc::libimc working_dir_launch_process working_dir_launch_process.test.c)
-add_test(NAME working_dir_launch_process COMMAND working_dir_launch_process ${CMAKE_SOURCE_DIR})
+add_test_executable(imc::libimc change_process_working_dir launch_process/change_process_working_dir.test.c)
+add_test(NAME change_process_working_dir COMMAND change_process_working_dir ${CMAKE_SOURCE_DIR})
 
 # This tests killing a process
-add_test_executable(imc::libimc kill_launch_process kill_launch_process.test.c)
-add_test(NAME kill_launch_process COMMAND kill_launch_process)
+add_test_executable(imc::libimc kill_process launch_process/kill_process.test.c)
+add_test(NAME kill_process COMMAND kill_process)
