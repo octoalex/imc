@@ -58,7 +58,7 @@ int main(const int argc, const char *argv[]) {
         fclose(out);
 
         // now, prepare a buffer, and read from the pipe
-        char received_wd[strlen(argv[1]) +1];
+        char received_wd[strlen(argv[1]) + 1];
         fscanf(in, "%s", received_wd);
 
         // wait for the program to terminate
