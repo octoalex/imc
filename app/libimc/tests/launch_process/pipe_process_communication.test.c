@@ -37,7 +37,7 @@ constexpr size_t IO_BUFFER_SIZE = 32;
 int main(const int argc, const char *argv[]) {
     if (argc > 2) {
         fprintf(stderr, "Incorrect number of arguments! Expected 0 or 1, got %d\n", argc - 1);
-        exit(-1);
+        return -1;
     }
 
     if (argc == 1) {

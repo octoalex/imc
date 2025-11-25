@@ -20,14 +20,13 @@
  */
 
 #include <limits.h>
-#include <stdlib.h>
 #include <signal.h>
 #include <imc/libimc/launch_process.h>
 
 int main(const int argc, const char *argv[]) {
     if (argc > 2) {
         fprintf(stderr, "Incorrect number of arguments! Expected 0 or 1, got %d\n", argc - 1);
-        exit(-1);
+        return -1;
     }
 
     if (argc == 1) {

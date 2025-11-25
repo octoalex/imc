@@ -27,7 +27,7 @@
 int main(const int argc, const char *argv[]) {
     if (argc > 2) {
         fprintf(stderr, "Incorrect number of arguments! Expected 0 or 1, got %d\n", argc - 1);
-        exit(-1);
+        return -1;
     }
 
     if (argc == 2) {
@@ -51,7 +51,7 @@ int main(const int argc, const char *argv[]) {
 
         if (process == PROCESS_ERROR_WORKING_DIRECTORY_INVALID) {
             fprintf(stderr, "Directory \"%s\" either does not exist, or is not accessible!\n", argv[1]);
-            exit(-1);
+            return -1;
         }
 
         // for good practice, the end of the pipe that we don't need should be closed

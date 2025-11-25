@@ -25,14 +25,13 @@
 #include <imc/libimc/launch_process.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <dirent.h>
 
 constexpr int BUFFER_SIZE = 16;
 
 int main(const int argc, const char *argv[]) {
     if (argc != 1 && argc != 3) {
         fprintf(stderr, "Incorrect number of arguments! Expected 0 or 2, got %d\n", argc - 1);
-        exit(-1);
+        return -1;
     }
 
     if (argc == 1) {
