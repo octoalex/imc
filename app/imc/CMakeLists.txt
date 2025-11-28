@@ -20,13 +20,15 @@ add_executable(imc)
 target_compile_features(imc PRIVATE c_std_23)
 
 target_sources(
-    imc
+        imc
 
-    # both src files and headers are private
-    PRIVATE
-    src/main.c
+        # both src files and headers are private
+        PRIVATE
+        src/main.c
 
-    PRIVATE
-    FILE_SET HEADERS
-    BASE_DIRS private
+        PRIVATE
+        FILE_SET HEADERS
+        BASE_DIRS private
 )
+
+target_link_libraries(imc PRIVATE imc::libimc)

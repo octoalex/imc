@@ -13,7 +13,33 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# This directory exists with the purpose of adding all subdirectories
+# This directory contains the launcher logic
 
-add_subdirectory(imc)
-add_subdirectory(libimc)
+add_library(libimc)
+
+configure_file(public/imc/libimc/config.in.h public/imc/libimc/config.h)
+
+target_compile_features(libimc PRIVATE c_std_23)
+
+target_sources(
+        libimc
+
+        PRIVATE
+        src/linux/launch_process.c
+
+        PUBLIC
+        FILE_SET libimc_public_headers
+        TYPE HEADERS
+        BASE_DIRS public "${CMAKE_CURRENT_BINARY_DIR}/public"
+
+        PRIVATE
+        FILE_SET libimc_private_headers
+        TYPE HEADERS
+        BASE_DIRS private
+)
+
+target_link_libraries(libimc PRIVATE m)
+
+add_library(imc::libimc ALIAS libimc)
+
+add_subdirectory(tests)
