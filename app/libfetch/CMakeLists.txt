@@ -13,8 +13,27 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# This directory exists with the purpose of adding all subdirectories
+add_library(libfetch)
 
-add_subdirectory(imc)
-add_subdirectory(libimc)
-add_subdirectory(libfetch)
+target_compile_features(libfetch PRIVATE c_std_23)
+
+target_sources(
+        libfetch
+
+        PRIVATE
+        src/fetch.c
+
+        PUBLIC
+        FILE_SET libfetch_public_headers
+        TYPE HEADERS
+        BASE_DIRS public
+
+        PRIVATE
+        FILE_SET libfetch_private_headers
+        TYPE HEADERS
+        BASE_DIRS private
+)
+
+target_link_libraries(libfetch PRIVATE curl)
+
+add_library(imc::libfetch ALIAS libfetch)
