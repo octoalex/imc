@@ -37,6 +37,7 @@ int main(const int argc, const char *argv[]) {
 
     if (!setup_fetch()) {
         fprintf(stderr, "Fetch setup has failed!\n");
+        cleanup_fetch();
         return -1;
     }
 
@@ -44,7 +45,10 @@ int main(const int argc, const char *argv[]) {
     uint8_t *data;
     size_t size;
 
-    if (!fetch(TEST_URL, &data, &size)) {
+    const bool success = fetch(TEST_URL, &data, &size);
+    cleanup_fetch();
+
+    if (!success) {
         // fetch has failed, abort
         fprintf(stderr, "Fetch has failed!\n");
         return -1;
