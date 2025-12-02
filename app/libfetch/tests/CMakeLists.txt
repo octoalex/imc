@@ -13,32 +13,14 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-add_library(libfetch)
+add_test(NAME curl_setup COMMAND curl https://www.example.com/ -o curl.html)
+add_test(NAME curl_cleanup COMMAND rm curl.html)
 
-target_compile_features(libfetch PRIVATE c_std_23)
+set_tests_properties(curl_setup PROPERTIES FIXTURES_SETUP fetch)
+set_tests_properties(curl_cleanup PROPERTIES FIXTURES_CLEANUP fetch)
 
-target_sources(
-        libfetch
+# Check if fetch performs like the curl command
+add_test_executable(imc::libfetch memory_fetch fetch/memory_fetch.test.c)
+add_test(NAME memory_fetch COMMAND memory_fetch)
 
-        PRIVATE
-        src/fetch.c
-
-        PUBLIC
-        FILE_SET libfetch_public_headers
-        TYPE HEADERS
-        BASE_DIRS public
-
-        PRIVATE
-        FILE_SET libfetch_private_headers
-        TYPE HEADERS
-        BASE_DIRS private
-)
-
-# libfyaml is included in source through git submodules, so there's no need to find the package
-#find_package(libfyaml REQUIRED)
-
-target_link_libraries(libfetch PRIVATE curl libfyaml::libfyaml)
-
-add_library(imc::libfetch ALIAS libfetch)
-
-add_subdirectory(tests)
+set_tests_properties(memory_fetch PROPERTIES FIXTURES_REQUIRED fetch)
