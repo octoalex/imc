@@ -25,12 +25,25 @@
 #include <stdio.h>
 #include <stdint.h>
 
+/// Fetches a file with a url
+/// @param url The url to download
+/// @param data Pointer to where the data array will be put
+/// @param size Pointer to where the array's size will be put
+/// @return Whether the fetch was successful
 bool fetch(const char *url, uint8_t **data, size_t *size);
 
+/// Fetches a file with a url
+/// @param url The url to download
+/// @param file File where the data will be saved to
+/// @return Whether the fetch was successful
 bool fetch_file(const char *url, FILE *file);
 
+/// Performs necessary setup operations for fetch
+/// @return Whether the setup was successful
 bool setup_fetch();
 
+/// Performs necessary cleanup operations for fetch
+/// @note To be performed <b>only</b> after the last fetch
 void cleanup_fetch();
 
 #endif //IMC_FETCH_H
