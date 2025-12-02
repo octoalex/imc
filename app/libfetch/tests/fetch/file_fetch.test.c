@@ -22,6 +22,8 @@
 #include <imc/fetch/fetch.h>
 #include "fetch_common.h"
 
+const char *const FETCH_PATH = "file_fetch.html";
+
 int main() {
     if (!setup_fetch()) {
         fprintf(stderr, "Fetch setup has failed!\n");
@@ -30,17 +32,28 @@ int main() {
     }
 
     // fetch to memory
-    uint8_t *data;
-    size_t size;
+    FILE *file = fopen(FETCH_PATH, "w");
 
-    const bool success = fetch(TEST_URL, &data, &size);
+    const bool success = fetch_file(TEST_URL, file);
     cleanup_fetch();
+
+    fclose(file);
+
+    // reset file
+    file = fopen(FETCH_PATH, "r");
+
+    // read all
+    size_t size;
+    const uint8_t *data = (uint8_t *)read_all_file(file, &size);
+
+    // close again
+    fclose(file);
+    file = nullptr;
 
     if (!success) {
         // fetch has failed, abort
         fprintf(stderr, "Fetch has failed!\n");
         return -1;
     }
-
     return check_downloaded_data(data, size);
 }
