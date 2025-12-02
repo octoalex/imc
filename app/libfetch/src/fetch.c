@@ -61,7 +61,7 @@ bool fetch(const char *url, uint8_t **data, size_t *size) {
     return result == CURLE_OK;
 }
 
-bool fetch_to_file(const char *url, FILE *file) {
+bool fetch_file(const char *url, FILE *file) {
     CURL *client = curl_easy_init();
     if (client == nullptr) {
         return false;
@@ -75,6 +75,6 @@ bool setup_fetch() {
     return res == CURLE_OK;
 }
 
-void shutdown_fetch() {
+void cleanup_fetch() {
     curl_global_cleanup();
 }

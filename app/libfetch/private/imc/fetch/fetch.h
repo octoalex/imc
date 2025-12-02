@@ -27,10 +27,10 @@
 
 bool fetch(const char *url, uint8_t **data, size_t *size);
 
-bool fetch_to_file(const char *url, FILE *file);
+bool fetch_file(const char *url, FILE *file);
 
 bool setup_fetch();
 
-void shutdown_fetch();
+void cleanup_fetch();
 
 #endif //IMC_FETCH_H
