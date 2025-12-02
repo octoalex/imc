@@ -36,7 +36,7 @@ static size_t write_to_memory(const void *contents, const size_t element, const 
     return size;
 }
 
-static CURLcode fetch_inner(CURL *client, const char *url, void *write_data, bool use_callback) {
+static CURLcode fetch_inner(CURL *client, const char *url, void *write_data, const bool use_callback) {
     curl_easy_setopt(client, CURLOPT_URL, url);
     if (use_callback) {
         curl_easy_setopt(client, CURLOPT_WRITEFUNCTION, write_to_memory);
