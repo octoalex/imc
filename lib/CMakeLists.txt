@@ -1,4 +1,4 @@
-# This file is part of octoalex's app (https://github.com/octoalex/imc).
+# This file is part of octoalex's imc (https://github.com/octoalex/imc).
 # Copyright (c) 2025 octoalex.
 # 
 # This program is free software: you can redistribute it and/or modify  
@@ -13,15 +13,4 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.23)
-
-project(imc VERSION 0.0.0)
-
-include(cmake/test_functions.cmake)
-
-if(${BUILD_TESTING})
-    enable_testing()
-endif()
-
-add_subdirectory(app)
-add_subdirectory(lib)
+add_subdirectory(libfyaml)

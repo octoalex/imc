@@ -13,8 +13,32 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# This directory exists with the purpose of adding all subdirectories
+add_library(libfetch)
 
-add_subdirectory(imc)
-add_subdirectory(libimc)
-add_subdirectory(libfetch)
+target_compile_features(libfetch PRIVATE c_std_23)
+
+target_sources(
+        libfetch
+
+        PRIVATE
+        src/fetch.c
+
+        PUBLIC
+        FILE_SET libfetch_public_headers
+        TYPE HEADERS
+        BASE_DIRS public
+
+        PRIVATE
+        FILE_SET libfetch_private_headers
+        TYPE HEADERS
+        BASE_DIRS private
+)
+
+# libfyaml is included in source through git submodules, so there's no need to find the package
+#find_package(libfyaml REQUIRED)
+
+target_link_libraries(libfetch PRIVATE curl libfyaml::libfyaml)
+
+add_library(imc::libfetch ALIAS libfetch)
+
+add_subdirectory(tests)
