@@ -28,6 +28,65 @@ none yet :P
 
 not yet
 
+## Building
+
+### 0. Prerequisites
+
+You will need:
+
+- CMake
+- Any C compiler
+- Any C compatible build system
+- Any command line
+
+Additionally, you may find it useful to have:
+
+- Git
+- Python 3
+  - You may need to install the `python3.13-venv` package on Debian/Ubuntu
+
+### 1. Get the source
+
+Download the source code from the `< > Code` button, and then download the code from
+[libfyaml](https://github.com/pantoniou/libfyaml/tree/master) using the same method, then extract the contents
+
+**OR**
+
+Run the following command
+
+```bash
+git clone https://github.com/octoalex/imc.git --recurse-submodules
+```
+
+### 2. Configure CMake
+
+Run the following command, and replace `<build_folder>` with your build folder of choice
+
+```bash
+cmake -B <build_folder>
+```
+
+### 3. Build!
+
+Run the following command, and replace `<build_folder>` with the same folder you put in the last step
+
+```bash
+cmake --build <build_folder>
+```
+
+All done for now!
+
+### E.1. Python developer scripts
+
+If you're interested in using the analysis commands (to help analyze the version manifests), then you must make sure
+python 3 is installed, and that virtual environments can be created (see [Prerequisites](#0-prerequisites))
+
+Run
+
+```bash
+cmake -B <build_folder> -DENABLE_SCRIPTS=ON
+```
+
 ## License
 
 All software components are distributed under the GNU GPLv3 License found [here (file `/LICENSE`)](LICENSE)
