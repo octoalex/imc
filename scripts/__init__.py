@@ -12,10 +12,3 @@
 #
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-# This directory exists with the purpose of adding all subdirectories
-
-add_subdirectory(imc)
-add_subdirectory(libimc)
-add_subdirectory(libfetch)
-add_subdirectory(libgame)
