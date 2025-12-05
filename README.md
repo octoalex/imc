@@ -81,11 +81,21 @@ All done for now!
 If you're interested in using the analysis commands (to help analyze the version manifests), then you must make sure
 python 3 is installed, and that virtual environments can be created (see [Prerequisites](#0-prerequisites))
 
-Run
+Install the following package:
+
+- `requests`
+
+Then you can run any of the scripts by running
 
 ```bash
-cmake -B <build_folder> -DENABLE_SCRIPTS=ON
+python3 scripts <command> <build_dir> [<...args>]
 ```
+
+Currently available commands:
+
+- `destructure` (additionally requires a version as an argument) turns every field of a version into its type
+- `redundancies` finds all fields that are identical in the manifest and in every version
+- `substitutions` finds all arguments that should be substituted into some value
 
 ## License
 
