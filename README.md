@@ -96,6 +96,7 @@ Currently available commands:
 - `destructure` (additionally requires a version as an argument) turns every field of a version into its type
 - `redundancies` finds all fields that are identical in the manifest and in every version
 - `substitutions` finds all arguments that should be substituted into some value
+- `assets` finds all assets that don't correspond with asset index ids
 
 ## License
 

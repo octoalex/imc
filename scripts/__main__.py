@@ -20,6 +20,7 @@ from manifest.versions import update_caches, is_version_valid
 from manifest.destructure import command_destructure
 from manifest.substitutions import command_substitutions
 from manifest.redundancies import command_redundancies
+from manifest.assets import command_assets
 
 
 CACHE_SUBDIR = "cache"
@@ -62,6 +63,8 @@ match command:
         command_substitutions(cache_dir, output_dir)
     case "redundancies":
         command_redundancies(cache_dir, output_dir)
+    case "assets":
+        command_assets(cache_dir, output_dir)
     case _:
         print("Invalid command ", command)
         exit(-1)
