@@ -19,7 +19,7 @@
  * Created by octoalex on 28/11/2025.
  */
 
-#include <imc/fetch/fetch.h>
+#include <imc/fetch/web_request.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -28,15 +28,15 @@
 const char *const CURL_USERAGENT = "libcurl-agent/1.0";
 
 static size_t write_to_memory(const void *contents, const size_t element, const size_t number, void *data) {
-    void **tuple = data;
+    web_request_buffer *buffer = data;
     const size_t size = number * element;
-    *(uint8_t **)tuple[0] = calloc(number, element);
-    *(size_t *)tuple[1] = size;
-    memcpy(*(uint8_t **)tuple[0], contents, size);
+    buffer->data = calloc(number, element);
+    buffer->size = size;
+    memcpy((void *)buffer->data, contents, size);
     return size;
 }
 
-static CURLcode fetch_inner(CURL *client, const char *url, void *write_data, const bool use_callback) {
+static CURLcode web_request_inner(CURL *client, const char *url, void *write_data, const bool use_callback) {
     curl_easy_setopt(client, CURLOPT_URL, url);
     if (use_callback) {
         curl_easy_setopt(client, CURLOPT_WRITEFUNCTION, write_to_memory);
@@ -49,32 +49,29 @@ static CURLcode fetch_inner(CURL *client, const char *url, void *write_data, con
     return result;
 }
 
-bool fetch(const char *url, uint8_t **data, size_t *size) {
-    void **tuple = calloc(2, sizeof(void *));
-    tuple[0] = data;
-    tuple[1] = size;
+bool web_request_memory(const char *url, web_request_buffer *buffer) {
     CURL *client = curl_easy_init();
     if (client == nullptr) {
         return false;
     }
-    const CURLcode result = fetch_inner(client, url, tuple, true);
+    const CURLcode result = web_request_inner(client, url, buffer, true);
     return result == CURLE_OK;
 }
 
-bool fetch_file(const char *url, FILE *file) {
+bool web_request_file(const char *url, FILE *file) {
     CURL *client = curl_easy_init();
     if (client == nullptr) {
         return false;
     }
-    const CURLcode result = fetch_inner(client, url, file, false);
+    const CURLcode result = web_request_inner(client, url, file, false);
     return result == CURLE_OK;
 }
 
-bool setup_fetch() {
+bool setup_web_request() {
     const CURLcode res = curl_global_init(CURL_GLOBAL_ALL);
     return res == CURLE_OK;
 }
 
-void cleanup_fetch() {
+void cleanup_web_request() {
     curl_global_cleanup();
 }

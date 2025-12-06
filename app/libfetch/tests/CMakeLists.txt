@@ -16,18 +16,18 @@
 # setup
 add_test(NAME curl_setup COMMAND curl https://www.example.com/ -o curl.html)
 
-# Check if fetch performs like the curl command
-add_test_executable(imc::libfetch memory_fetch fetch/memory_fetch.test.c)
-add_test(NAME memory_fetch COMMAND memory_fetch)
+# Check if web_request_memory performs like the curl command
+add_test_executable(imc::libfetch web_request_memory web_request/web_request_memory.test.c)
+add_test(NAME web_request_memory COMMAND web_request_memory)
 
-# Check if fetch_to_file performs like the curl command
-add_test_executable(imc::libfetch file_fetch fetch/file_fetch.test.c)
-add_test(NAME file_fetch COMMAND file_fetch)
+# Check if web_request_file performs like the curl command
+add_test_executable(imc::libfetch web_request_file web_request/web_request_file.test.c)
+add_test(NAME web_request_file COMMAND web_request_file)
 
 # cleanup
 add_test(NAME curl_cleanup COMMAND rm curl.html)
 
 # set fixtures
-set_tests_properties(memory_fetch file_fetch PROPERTIES FIXTURES_REQUIRED fetch)
-set_tests_properties(curl_setup PROPERTIES FIXTURES_SETUP fetch)
-set_tests_properties(curl_cleanup PROPERTIES FIXTURES_CLEANUP fetch)
+set_tests_properties(web_request_memory web_request_file PROPERTIES FIXTURES_REQUIRED web_request)
+set_tests_properties(curl_setup PROPERTIES FIXTURES_SETUP web_request)
+set_tests_properties(curl_cleanup PROPERTIES FIXTURES_CLEANUP web_request)

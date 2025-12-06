@@ -22,6 +22,8 @@
 #ifndef IMC_COMMON_TEST_H
 #define IMC_COMMON_TEST_H
 
+#include <stdio.h>
+
 const char *const TEST_URL = "https://www.example.com/";
 const char *const CURL_FILE_PATH = "curl.html";
 constexpr size_t COMPARE_SIZE = 32;
