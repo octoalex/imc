@@ -19,8 +19,8 @@
  * Created by octoalex on 28/11/2025.
  */
 
-#ifndef IMC_FETCH_H
-#define IMC_FETCH_H
+#ifndef IMC_WEB_REQUEST_H
+#define IMC_WEB_REQUEST_H
 
 #include <stdio.h>
 #include <stdint.h>
@@ -54,4 +54,4 @@ bool setup_web_request();
 /// @note To be performed <b>only</b> after the last web request
 void cleanup_web_request();
 
-#endif //IMC_FETCH_H
+#endif //IMC_WEB_REQUEST_H
