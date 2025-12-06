@@ -19,23 +19,23 @@
  * Created by octoalex on 02/12/2025.
  */
 
-#include <imc/fetch/fetch.h>
-#include "fetch_common.h"
+#include <imc/fetch/web_request.h>
+#include "common.h"
 
 const char *const FETCH_PATH = "file_fetch.html";
 
 int main() {
-    if (!setup_fetch()) {
+    if (!setup_web_request()) {
         fprintf(stderr, "Fetch setup has failed!\n");
-        cleanup_fetch();
+        cleanup_web_request();
         return -1;
     }
 
-    // fetch to memory
+    // web_request to memory
     FILE *file = fopen(FETCH_PATH, "w");
 
-    const bool success = fetch_file(TEST_URL, file);
-    cleanup_fetch();
+    const bool success = web_request_file(TEST_URL, file);
+    cleanup_web_request();
 
     fclose(file);
 
@@ -51,7 +51,7 @@ int main() {
     file = nullptr;
 
     if (!success) {
-        // fetch has failed, abort
+        // web_request has failed, abort
         fprintf(stderr, "Fetch has failed!\n");
         return -1;
     }

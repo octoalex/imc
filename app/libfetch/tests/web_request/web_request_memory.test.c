@@ -19,28 +19,31 @@
  * Created by octoalex on 02/12/2025.
  */
 
-#include <imc/fetch/fetch.h>
-#include "fetch_common.h"
+#include <imc/fetch/web_request.h>
+#include <stdlib.h>
+#include "common.h"
 
 int main() {
-    if (!setup_fetch()) {
+    if (!setup_web_request()) {
         fprintf(stderr, "Fetch setup has failed!\n");
-        cleanup_fetch();
+        cleanup_web_request();
         return -1;
     }
 
-    // fetch to memory
-    uint8_t *data;
-    size_t size;
+    web_request_buffer buffer;
 
-    const bool success = fetch(TEST_URL, &data, &size);
-    cleanup_fetch();
+    const bool success = web_request_memory(TEST_URL, &buffer);
+    cleanup_web_request();
 
     if (!success) {
-        // fetch has failed, abort
+        // web_request has failed, abort
         fprintf(stderr, "Fetch has failed!\n");
         return -1;
     }
 
-    return check_downloaded_data(data, size);
+    const int result = check_downloaded_data(buffer.data, buffer.size);
+    free((void *)buffer.data);
+    buffer.data = nullptr;
+    buffer.size = 0;
+    return result;
 }

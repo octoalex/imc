@@ -25,25 +25,33 @@
 #include <stdio.h>
 #include <stdint.h>
 
-/// Fetches a file with a url
-/// @param url The url to download
-/// @param data Pointer to where the data array will be put
-/// @param size Pointer to where the array's size will be put
-/// @return Whether the fetch was successful
-bool fetch(const char *url, uint8_t **data, size_t *size);
+/// Buffer where downloaded data will be put
+typedef struct web_request_buffer {
+    /// The actual data
+    /// @note Must be manually deallocated with @code free()@endcode from @headerfile stdlib.h
+    const uint8_t *data;
+    /// The size of @code data@endcode
+    size_t size;
+} web_request_buffer;
 
-/// Fetches a file with a url
+/// Gets a file from a url to memory
+/// @param url The url to download
+/// @param buffer Pointer to where the downloaded data will be put
+/// @return Whether the web request was successful
+bool web_request_memory(const char *url, web_request_buffer *buffer);
+
+/// Gets a file from a url to another file
 /// @param url The url to download
 /// @param file File where the data will be saved to
-/// @return Whether the fetch was successful
-bool fetch_file(const char *url, FILE *file);
+/// @return Whether the web request was successful
+bool web_request_file(const char *url, FILE *file);
 
-/// Performs necessary setup operations for fetch
+/// Performs necessary setup operations for web_request
 /// @return Whether the setup was successful
-bool setup_fetch();
+bool setup_web_request();
 
-/// Performs necessary cleanup operations for fetch
-/// @note To be performed <b>only</b> after the last fetch
-void cleanup_fetch();
+/// Performs necessary cleanup operations for web_request
+/// @note To be performed <b>only</b> after the last web request
+void cleanup_web_request();
 
 #endif //IMC_FETCH_H

@@ -21,7 +21,7 @@ target_sources(
         libfetch
 
         PRIVATE
-        src/fetch.c
+        src/web_request.c
 
         PUBLIC
         FILE_SET libfetch_public_headers
