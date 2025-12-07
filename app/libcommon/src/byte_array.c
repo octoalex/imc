@@ -21,6 +21,7 @@
 
 #include <imc/common/byte_array.h>
 #include <stdlib.h>
+#include <string.h>
 
 byte_array alloc_byte_array(const size_t size) {
     const byte_array array = {
@@ -34,4 +35,25 @@ void free_byte_array(byte_array *array) {
     free(array->data);
     array->data = nullptr;
     array->size = 0;
+}
+
+void resize_byte_array(byte_array *array, const size_t new_size) {
+    uint8_t *new_data = realloc(array->data, new_size);
+    if (new_data == nullptr) {
+        // in this case, free
+        free_byte_array(array);
+        return;
+    }
+    for (size_t i = array->size; i < new_size; ++i) {
+        new_data[i] = 0;
+    }
+    array->data = new_data;
+    array->size = new_size;
+}
+
+byte_array copy_byte_array(const byte_array *base) {
+    byte_array new = *base;
+    new.data = malloc(base->size * sizeof(uint8_t));
+    memcpy(new.data, base->data, new.size);
+    return new;
 }
