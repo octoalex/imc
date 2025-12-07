@@ -24,6 +24,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <imc/common/nullable.h>
 
 /// An array of bytes
 /// @note It is recommended to allocate it with @code alloc_byte_array(size_t)@endcode and to deallocate it with
@@ -31,7 +32,7 @@
 /// @details To allocate, deallocate, resize and copy manually, see the aforementioned functions' implementation details
 typedef struct byte_array {
     /// The bytes
-    uint8_t *data;
+    uint8_t *NULLABLE data;
     /// The number of bytes
     size_t size;
 } byte_array;

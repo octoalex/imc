@@ -38,7 +38,7 @@ target_sources(
         BASE_DIRS private
 )
 
-target_link_libraries(libimc PRIVATE m imc::libfetch)
+target_link_libraries(libimc PRIVATE m imc::libfetch imc::libcommon)
 
 add_library(imc::libimc ALIAS libimc)
 
