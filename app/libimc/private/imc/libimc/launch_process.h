@@ -23,6 +23,7 @@
 #define IMC_LAUNCH_PROCESS_H
 
 #include <stdio.h>
+#include <imc/common/nullable.h>
 
 #ifdef linux
 #   include <unistd.h>
@@ -62,7 +63,13 @@ typedef DWORD pid_t;
 ///     - -4: Working directory is not accessible
 ///     - -5: Process creation failed
 /// @bug On Linux, all the calling process's file descriptors are kept by the launched process
-pid_t launch_process(const char *command[], const char *working_directory, FILE *in, FILE *out, FILE *err);
+pid_t launch_process(
+    const char *command[],
+    const char *NULLABLE working_directory,
+    FILE *NULLABLE in,
+    FILE *NULLABLE out,
+    FILE *NULLABLE err
+);
 
 /// Waits for the process to terminate, and returns its exit code
 /// @param process The process's PID                                                                                <br>
@@ -70,7 +77,7 @@ pid_t launch_process(const char *command[], const char *working_directory, FILE 
 /// @param was_killed Whether the process exited normally (by the main returning or calling exit)                   <br>
 ///   If null, then it will be ignored
 /// @return The process's exit code
-int wait_process(pid_t process, bool *was_killed);
+int wait_process(pid_t process, bool *NULLABLE was_killed);
 
 /// Check if the process is still alive
 /// @param process The process's PID                                                                                <br>
