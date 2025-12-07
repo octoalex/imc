@@ -30,7 +30,7 @@ int main() {
         return -1;
     }
 
-    web_request_buffer buffer;
+    byte_array buffer;
 
     const bool success = web_request_memory(TEST_URL, &buffer);
     cleanup_web_request();
@@ -42,8 +42,6 @@ int main() {
     }
 
     const int result = check_downloaded_data(buffer.data, buffer.size);
-    free((void *)buffer.data);
-    buffer.data = nullptr;
-    buffer.size = 0;
+    free_byte_array(&buffer);
     return result;
 }

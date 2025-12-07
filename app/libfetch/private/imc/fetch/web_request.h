@@ -24,21 +24,13 @@
 
 #include <stdio.h>
 #include <stdint.h>
-
-/// Buffer where downloaded data will be put
-typedef struct web_request_buffer {
-    /// The actual data
-    /// @note Must be manually deallocated with @code free()@endcode from @headerfile stdlib.h
-    const uint8_t *data;
-    /// The size of @code data@endcode
-    size_t size;
-} web_request_buffer;
+#include <imc/common/byte_array.h>
 
 /// Gets a file from a url to memory
 /// @param url The url to download
 /// @param buffer Pointer to where the downloaded data will be put
 /// @return Whether the web request was successful
-bool web_request_memory(const char *url, web_request_buffer *buffer);
+bool web_request_memory(const char *url, byte_array *buffer);
 
 /// Gets a file from a url to another file
 /// @param url The url to download
