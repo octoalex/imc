@@ -13,9 +13,20 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# This directory exists with the purpose of adding all subdirectories
+add_library(libcommon)
 
-add_subdirectory(imc)
-add_subdirectory(libimc)
-add_subdirectory(libfetch)
-add_subdirectory(libcommon)
+target_compile_features(libcommon PRIVATE c_std_23)
+
+target_sources(
+        libcommon
+
+        PRIVATE
+        src/byte_array.c
+
+        PUBLIC
+        FILE_SET libcommon_public_headers
+        TYPE HEADERS
+        BASE_DIRS public
+)
+
+add_library(imc::libcommon ALIAS libcommon)
