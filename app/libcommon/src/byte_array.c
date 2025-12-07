@@ -24,6 +24,10 @@
 #include <string.h>
 
 byte_array alloc_byte_array(const size_t size) {
+    if (size == 0) {
+        const byte_array empty = { nullptr, 0 };
+        return empty;
+    }
     const byte_array array = {
         .data = calloc(size, sizeof(uint8_t)),
         .size = size

@@ -39,6 +39,7 @@ typedef struct byte_array {
 /// Allocates a zeroed byte array
 /// @param size The size of the array
 /// @return The array
+/// @note Setting @code size@endcode to @code 0@endcode will return an empty array
 /// @details Functionally, it's just a @code calloc@endcode call, however it ensures that size is identical to the
 ///          actual size of the array, and simplifies creation (1 line instead of 4)
 byte_array alloc_byte_array(size_t size);
