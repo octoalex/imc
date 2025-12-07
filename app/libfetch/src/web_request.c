@@ -28,11 +28,11 @@
 const char *const CURL_USERAGENT = "libcurl-agent/1.0";
 
 static size_t write_to_memory(const void *contents, const size_t element, const size_t number, void *data) {
-    web_request_buffer *buffer = data;
+    byte_array *buffer = data;
     const size_t size = number * element;
-    buffer->data = calloc(number, element);
-    buffer->size = size;
-    memcpy((void *)buffer->data, contents, size);
+    free_byte_array(buffer);
+    *buffer = alloc_byte_array(size);
+    memcpy(buffer->data, contents, size);
     return size;
 }
 
@@ -49,7 +49,7 @@ static CURLcode web_request_inner(CURL *client, const char *url, void *write_dat
     return result;
 }
 
-bool web_request_memory(const char *url, web_request_buffer *buffer) {
+bool web_request_memory(const char *url, byte_array *buffer) {
     CURL *client = curl_easy_init();
     if (client == nullptr) {
         return false;

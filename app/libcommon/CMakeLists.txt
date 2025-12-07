@@ -13,33 +13,20 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-add_library(libfetch)
+add_library(libcommon)
 
-target_compile_features(libfetch PRIVATE c_std_23)
+target_compile_features(libcommon PRIVATE c_std_23)
 
 target_sources(
-        libfetch
+        libcommon
 
         PRIVATE
-        src/web_request.c
-        src/fetch.c
+        src/byte_array.c
 
         PUBLIC
-        FILE_SET libfetch_public_headers
+        FILE_SET libcommon_public_headers
         TYPE HEADERS
         BASE_DIRS public
-
-        PRIVATE
-        FILE_SET libfetch_private_headers
-        TYPE HEADERS
-        BASE_DIRS private
 )
 
-# libfyaml is included in source through git submodules, so there's no need to find the package
-#find_package(libfyaml REQUIRED)
-
-target_link_libraries(libfetch PRIVATE curl libfyaml::libfyaml PUBLIC imc::libcommon)
-
-add_library(imc::libfetch ALIAS libfetch)
-
-add_subdirectory(tests)
+add_library(imc::libcommon ALIAS libcommon)

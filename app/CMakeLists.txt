@@ -18,4 +18,4 @@
 add_subdirectory(imc)
 add_subdirectory(libimc)
 add_subdirectory(libfetch)
-add_subdirectory(libgame)
+add_subdirectory(libcommon)
