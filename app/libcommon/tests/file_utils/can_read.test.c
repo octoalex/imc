@@ -23,5 +23,5 @@
 #include "file_names.h"
 
 int main() {
-    return can_read(ACCESSIBLE_PATH) && !can_read(INACCESSIBLE_PATH) && !can_read(NOT_FILE_PATH) ? -1 : 0;
+    return can_read(ACCESSIBLE_PATH) && !can_read(INACCESSIBLE_PATH) && !can_read(NOT_FILE_PATH) ? 0 : -1;
 }

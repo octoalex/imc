@@ -23,22 +23,19 @@
 #include <string.h>
 #include <imc/common/file_utils.h>
 
-const char *const MODE_USE = "use";
-const char *const MODE_TEST = "test";
-const char *const PATH = "a/b/c/d";
+const char *const PATH_SHORT = "a/b/c/d";
+const char *const PATH_LONG = "e/f/g/h/";
 
-int main(const int argc, const char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Expected 1 argument, got %d instead!\n", argc - 1);
-        return -1;
+int main() {
+    make_dirs(PATH_SHORT);
+    make_dirs(PATH_LONG);
+    const bool short_passed = is_dir(PATH_SHORT);
+    const bool long_passed = is_dir(PATH_LONG);
+    if (!short_passed) {
+        fprintf(stderr, "make_dirs failed with path not terminated by separator (/)!\n");
     }
-    const char *mode = argv[1];
-    if (strcmp(mode, MODE_USE) == 0) {
-        make_dirs(PATH);
-        return 0;
-    } else if (strcmp(mode, MODE_TEST) == 0) {
-        return is_dir(PATH);
+    if (!long_passed) {
+        fprintf(stderr, "make_dirs failed with path terminated by separator (/)!\n");
     }
-    fprintf(stderr, "Unknown mode %s\n", mode);
-    return -1;
+    return short_passed && long_passed ? 0 : -1;
 }

@@ -16,7 +16,8 @@
 # setup
 add_test(NAME create_base_directory COMMAND mkdir dir)
 add_test(NAME create_files COMMAND touch accessible inaccessible)
-add_test(NAME change_file_access COMMAND chmod 000 inaccessible)
+add_test(NAME file_access_all COMMAND chmod 777 accessible)
+add_test(NAME file_access_none COMMAND chmod 000 inaccessible)
 
 # Test is_dir
 add_test_executable(imc::libcommon is_dir file_utils/is_dir.test.c)
@@ -43,7 +44,10 @@ add_test(NAME cleanup_files COMMAND rm -rf dir accessible inaccessible)
 
 # set fixtures
 set_tests_properties(is_dir is_file can_read can_write can_execute PROPERTIES FIXTURES_REQUIRED file_utils)
-set_tests_properties(create_base_directory create_files change_file_access PROPERTIES FIXTURES_SETUP file_utils)
+set_tests_properties(
+        create_base_directory create_files file_access_all file_access_none
+        PROPERTIES FIXTURES_SETUP file_utils
+)
 set_tests_properties(cleanup_files PROPERTIES FIXTURES_CLEANUP file_utils)
 
 ### make_dirs ###
@@ -53,13 +57,12 @@ add_test(NAME make_dirs_setup COMMAND mkdir a a/b)
 
 # test make_dirs
 add_test_executable(imc::libcommon make_dirs file_utils/make_dirs.test.c)
-add_test(NAME make_dirs_use COMMAND make_dirs use)
-add_test(NAME make_dirs_test COMMAND make_dirs test)
+add_test(NAME make_dirs COMMAND make_dirs)
 
 # cleanup make_dirs
-add_test(NAME make_dirs_cleanup COMMAND rm -r a)
+add_test(NAME make_dirs_cleanup COMMAND rm -r a e)
 
 # set fixtures for make_dirs
-set_tests_properties(make_dirs_test PROPERTIES FIXTURES_REQUIRED make_dirs)
-set_tests_properties(make_dirs_setup make_dirs_use PROPERTIES FIXTURES_SETUP make_dirs)
+set_tests_properties(make_dirs PROPERTIES FIXTURES_REQUIRED make_dirs)
+set_tests_properties(make_dirs_setup PROPERTIES FIXTURES_SETUP make_dirs)
 set_tests_properties(make_dirs_cleanup PROPERTIES FIXTURES_CLEANUP make_dirs)

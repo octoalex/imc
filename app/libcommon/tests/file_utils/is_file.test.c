@@ -23,5 +23,5 @@
 #include "file_names.h"
 
 int main() {
-    return is_file(ACCESSIBLE_PATH) && is_file(INACCESSIBLE_PATH) && !is_file(NOT_FILE_PATH) ? -1 : 0;
+    return is_file(ACCESSIBLE_PATH) && is_file(INACCESSIBLE_PATH) && !is_file(NOT_FILE_PATH) ? 0 : -1;
 }

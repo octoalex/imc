@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 constexpr mode_t STANDARD_MODE = 0755;
 
@@ -31,14 +32,15 @@ void make_dirs(const char *path) {
     char *buffer = calloc(strlen(path) + 1, sizeof(char));
     char *ptr;
     size_t offset = 0;
+    const size_t size = strlen(path);
     do {
         // get the subdirectory
         // get the position of the next directory separator
-        ptr = strchr(path + offset, '/');
+        ptr = strchr(path + offset + 1, '/');
         // get the position
-        const size_t end = ptr == nullptr ? strlen(path) : ptr - path;
+        const size_t end = ptr == nullptr ? size - 1 : ptr - path;
         // copy only the new bytes
-        memcpy(buffer + offset, path + offset, end - offset);
+        memcpy(buffer + offset, path + offset, end - offset + 1);
 
         // check if the subdirectory exists
         if (!is_dir(buffer)) {
@@ -47,8 +49,8 @@ void make_dirs(const char *path) {
         }
         // set the position of the latest separator as the offset for the next iteration
         // increase by 1 to avoid reading again the current separator, thus creating an infinite loop
-        offset = end + 1;
-    } while (ptr != nullptr);
+        offset = end;
+    } while (ptr != nullptr && offset < size - 1);
     // free the buffer
     free(buffer);
 }
@@ -59,17 +61,17 @@ bool is_dir(const char *path) {
 }
 
 bool is_file(const char *path) {
-    return access(path, F_OK);
+    return access(path, F_OK) == 0;
 }
 
 bool can_read(const char *path) {
-    return access(path, W_OK);
+    return access(path, W_OK) == 0;
 }
 
 bool can_write(const char *path) {
-    return access(path, R_OK);
+    return access(path, R_OK) == 0;
 }
 
 bool can_execute(const char *path) {
-    return access(path, X_OK);
+    return access(path, X_OK) == 0;
 }
