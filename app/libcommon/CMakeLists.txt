@@ -31,3 +31,5 @@ target_sources(
 )
 
 add_library(imc::libcommon ALIAS libcommon)
+
+add_subdirectory(tests)

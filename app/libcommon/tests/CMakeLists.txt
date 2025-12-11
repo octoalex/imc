@@ -1,0 +1,47 @@
+# This file is part of octoalex's imc (https://github.com/octoalex/imc).
+# Copyright (c) 2025 octoalex.
+# 
+# This program is free software: you can redistribute it and/or modify  
+# it under the terms of the GNU General Public License as published by  
+# the Free Software Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# setup
+add_test(NAME create_base_directory COMMAND mkdir dir)
+add_test(NAME create_files COMMAND touch accessible inaccessible)
+add_test(NAME change_file_access COMMAND chmod 000 inaccessible)
+
+# Test is_dir
+add_test_executable(imc::libcommon is_dir file_utils/is_dir.test.c)
+add_test(NAME is_dir COMMAND is_dir)
+
+# Test is_file
+add_test_executable(imc::libcommon is_file file_utils/is_file.test.c)
+add_test(NAME is_file COMMAND is_file)
+
+# Test can_read
+add_test_executable(imc::libcommon can_read file_utils/can_read.test.c)
+add_test(NAME can_read COMMAND can_read)
+
+# Test can_write
+add_test_executable(imc::libcommon can_write file_utils/can_write.test.c)
+add_test(NAME can_write COMMAND can_write)
+
+# Test can_execute
+add_test_executable(imc::libcommon can_execute file_utils/can_execute.test.c)
+add_test(NAME can_execute COMMAND can_execute)
+
+# cleanup
+add_test(NAME cleanup_files COMMAND rm -rf dir accessible inaccessible)
+
+# set fixtures
+set_tests_properties(is_dir is_file can_read can_write can_execute PROPERTIES FIXTURES_REQUIRED file_utils)
+set_tests_properties(create_base_directory create_files change_file_access PROPERTIES FIXTURES_SETUP file_utils)
+set_tests_properties(cleanup_files PROPERTIES FIXTURES_CLEANUP file_utils)
