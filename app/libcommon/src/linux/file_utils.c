@@ -46,7 +46,8 @@ void make_dirs(const char *path) {
             mkdir(buffer, STANDARD_MODE);
         }
         // set the position of the latest separator as the offset for the next iteration
-        offset = end;
+        // increase by 1 to avoid reading again the current separator, thus creating an infinite loop
+        offset = end + 1;
     } while (ptr != nullptr);
     // free the buffer
     free(buffer);
