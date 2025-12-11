@@ -64,5 +64,5 @@ add_test(NAME make_dirs_cleanup COMMAND rm -r a e)
 
 # set fixtures for make_dirs
 set_tests_properties(make_dirs PROPERTIES FIXTURES_REQUIRED make_dirs)
-set_tests_properties(make_dirs_setup PROPERTIES FIXTURES_SETUP make_dirs)
+set_tests_properties(make_dirs_setup is_dir PROPERTIES FIXTURES_SETUP make_dirs)
 set_tests_properties(make_dirs_cleanup PROPERTIES FIXTURES_CLEANUP make_dirs)
