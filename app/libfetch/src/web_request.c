@@ -26,6 +26,8 @@
 #include <curl/curl.h>
 
 const char *const CURL_USERAGENT = "libcurl-agent/1.0";
+const char *const HTTP_URL_START = "http://";
+const char *const HTTPS_URL_START = "https://";
 
 /// Helper that writes the bytes downloaded by curl to memory
 static size_t write_to_memory(const void *contents, const size_t element, const size_t number, void *data) {
@@ -97,6 +99,11 @@ static web_request_status curl_code_to_web_request_status(const CURLcode code) {
 }
 
 web_request_status web_request(const char *url, byte_array *buffer, const unsigned long timeout) {
+    if (!strncasecmp(url, HTTP_URL_START, strlen(HTTP_URL_START))
+        && !strncasecmp(url, HTTPS_URL_START, strlen(HTTPS_URL_START))) {
+        return WEB_REQUEST_INVALID_PROTOCOL;
+    }
+
     CURL *client = curl_easy_init();
     if (client == nullptr) {
         return false;
