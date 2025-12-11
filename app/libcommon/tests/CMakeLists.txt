@@ -45,3 +45,21 @@ add_test(NAME cleanup_files COMMAND rm -rf dir accessible inaccessible)
 set_tests_properties(is_dir is_file can_read can_write can_execute PROPERTIES FIXTURES_REQUIRED file_utils)
 set_tests_properties(create_base_directory create_files change_file_access PROPERTIES FIXTURES_SETUP file_utils)
 set_tests_properties(cleanup_files PROPERTIES FIXTURES_CLEANUP file_utils)
+
+### make_dirs ###
+
+# setup for make_dirs
+add_test(NAME make_dirs_setup COMMAND mkdir a a/b)
+
+# test make_dirs
+add_test_executable(imc::libcommon make_dirs file_utils/make_dirs.test.c)
+add_test(NAME make_dirs_use COMMAND make_dirs use)
+add_test(NAME make_dirs_test COMMAND make_dirs test)
+
+# cleanup make_dirs
+add_test(NAME make_dirs_cleanup COMMAND rm -r a)
+
+# set fixtures for make_dirs
+set_tests_properties(make_dirs_test PROPERTIES FIXTURES_REQUIRED make_dirs)
+set_tests_properties(make_dirs_setup make_dirs_use PROPERTIES FIXTURES_SETUP make_dirs)
+set_tests_properties(make_dirs_cleanup PROPERTIES FIXTURES_CLEANUP make_dirs)
