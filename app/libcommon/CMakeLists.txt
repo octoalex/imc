@@ -22,6 +22,7 @@ target_sources(
 
         PRIVATE
         src/byte_array.c
+        src/linux/file_utils.c
 
         PUBLIC
         FILE_SET libcommon_public_headers
