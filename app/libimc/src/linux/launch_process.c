@@ -25,7 +25,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <imc/libimc/launch_process.h>
-#include <sys/stat.h>
+#include <imc/common/file_utils.h>
 #include <sys/wait.h>
 
 static void close_all_file_descriptors();
@@ -39,20 +39,17 @@ pid_t launch_process(const char *command[], const char *working_directory, FILE 
     }
 
     // check that the program exists
-    if (access(*command, F_OK) != 0) {
+    if (!is_file(*command)) {
         return PROCESS_ERROR_PROGRAM_DOES_NOT_EXISTS;
     }
 
     // check that the program can be executed
-    if (access(*command, R_OK | X_OK) != 0) {
+    if (!can_read(*command) || !can_execute(*command)) {
         return PROCESS_ERROR_PROGRAM_CANNOT_BE_EXECUTED;
     }
 
     // check that the working directory is valid
-    struct stat st;
-    if (working_directory != nullptr && (
-        stat(working_directory, &st) != 0 || !S_ISDIR(st.st_mode))
-        ) {
+    if (working_directory != nullptr && !is_dir(working_directory)) {
         return PROCESS_ERROR_WORKING_DIRECTORY_INVALID;
     }
 
