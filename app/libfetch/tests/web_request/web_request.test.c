@@ -20,40 +20,28 @@
  */
 
 #include <imc/fetch/web_request.h>
+#include <stdlib.h>
 #include "common.h"
 
-const char *const FETCH_PATH = "file_fetch.html";
-
 int main() {
-    if (!setup_web_request()) {
-        fprintf(stderr, "Fetch setup has failed!\n");
+    if (setup_web_request() != WEB_REQUEST_STATUS_OK) {
+        fprintf(stderr, "Web Request setup has failed!\n");
         cleanup_web_request();
         return -1;
     }
 
-    // web_request to memory
-    FILE *file = fopen(FETCH_PATH, "w");
+    byte_array buffer;
 
-    const bool success = web_request_file(TEST_URL, file);
+    const web_request_status status = web_request(TEST_URL, &buffer, DEFAULT_TIMEOUT);
     cleanup_web_request();
 
-    fclose(file);
-
-    // reset file
-    file = fopen(FETCH_PATH, "r");
-
-    // read all
-    size_t size;
-    const uint8_t *data = (uint8_t *)read_all_file(file, &size);
-
-    // close again
-    fclose(file);
-    file = nullptr;
-
-    if (!success) {
+    if (status != WEB_REQUEST_STATUS_OK) {
         // web_request has failed, abort
-        fprintf(stderr, "Fetch has failed!\n");
+        fprintf(stderr, "Web Request has failed!\n");
         return -1;
     }
-    return check_downloaded_data(data, size);
+
+    const int result = check_downloaded_data(buffer.data, buffer.size);
+    free_byte_array(&buffer);
+    return result;
 }
