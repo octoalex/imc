@@ -24,18 +24,15 @@
 #include "common.h"
 
 int main() {
-    if (setup_web_request() != WEB_REQUEST_STATUS_OK) {
-        fprintf(stderr, "Web Request setup has failed!\n");
-        cleanup_web_request();
-        return -1;
-    }
-
     byte_array buffer;
 
     const web_request_status status = web_request(TEST_URL, &buffer, DEFAULT_TIMEOUT);
     cleanup_web_request();
 
-    if (status != WEB_REQUEST_STATUS_OK) {
+    if (status == WEB_REQUEST_STATUS_SETUP_ERROR) {
+        fprintf(stderr, "Web Request setup has failed!\n");
+        return -1;
+    } else if (status != WEB_REQUEST_STATUS_OK) {
         // web_request has failed, abort
         fprintf(stderr, "Web Request has failed!\n");
         return -1;
