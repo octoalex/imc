@@ -34,7 +34,7 @@ typedef enum web_request_status : uint8_t {
     /// URL was improperly formatted
     WEB_REQUEST_STATUS_BAD_URL,
     /// Request was not http or https
-    WEB_REQUEST_INVALID_PROTOCOL,
+    WEB_REQUEST_STATUS_INVALID_PROTOCOL,
     /// Host could not be reached
     WEB_REQUEST_STATUS_HOST_UNREACHABLE,
     /// Connection to the host failed

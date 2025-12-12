@@ -101,7 +101,7 @@ static web_request_status curl_code_to_web_request_status(const CURLcode code) {
 web_request_status web_request(const char *url, byte_array *buffer, const unsigned long timeout) {
     if (!strncasecmp(url, HTTP_URL_START, strlen(HTTP_URL_START))
         && !strncasecmp(url, HTTPS_URL_START, strlen(HTTPS_URL_START))) {
-        return WEB_REQUEST_INVALID_PROTOCOL;
+        return WEB_REQUEST_STATUS_INVALID_PROTOCOL;
     }
 
     CURL *client = curl_easy_init();
