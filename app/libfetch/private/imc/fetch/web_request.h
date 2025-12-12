@@ -26,6 +26,9 @@
 #include <stdint.h>
 #include <imc/common/byte_array.h>
 
+/// Status codes of the web_request function
+/// @note These codes are not final, and may change at any time, and are not necessarily accurate to the underlying
+///       problem
 typedef enum web_request_status : uint8_t {
     /// Download went successfully
     WEB_REQUEST_STATUS_OK,
