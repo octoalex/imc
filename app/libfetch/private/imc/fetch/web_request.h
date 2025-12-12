@@ -29,7 +29,7 @@
 typedef enum web_request_status : uint8_t {
     /// Download went successfully
     WEB_REQUEST_STATUS_OK,
-    /// Setup was unsuccessful, or there was none
+    /// Setup was unsuccessful
     WEB_REQUEST_STATUS_SETUP_ERROR,
     /// URL was improperly formatted
     WEB_REQUEST_STATUS_BAD_URL,
@@ -41,15 +41,8 @@ typedef enum web_request_status : uint8_t {
     WEB_REQUEST_STATUS_CONNECT_ERROR,
     /// Downloading the file failed
     WEB_REQUEST_STATUS_DOWNLOAD_ERROR,
-    /// File cannot be accessed, or does not exist
-    WEB_REQUEST_STATUS_FILE_INACCESSIBLE,
     /// Download took too long
     WEB_REQUEST_STATUS_TIMEOUT,
-    /// The SSL connection failed
-    WEB_REQUEST_STATUS_SSL_ERROR,
-    /// There was an error with the proxy
-    /// @note Proxies not yet implemented
-    // WEB_REQUEST_STATUS_PROXY_ERROR,
     /// There was insufficient memory to download the file
     /// @note This is catastrophic
     WEB_REQUEST_STATUS_OUT_OF_MEMORY,
@@ -67,10 +60,6 @@ constexpr unsigned long DEFAULT_TIMEOUT = 300'000;
 ///                If set to < 0, the default value will be used
 /// @return The web request's status code
 web_request_status web_request(const char *url, byte_array *buffer, unsigned long timeout);
-
-/// Performs necessary setup operations for web_request
-/// @return The setup's status code
-web_request_status setup_web_request();
 
 /// Performs necessary cleanup operations for web_request
 /// @note To be performed <b>only</b> after the last web request

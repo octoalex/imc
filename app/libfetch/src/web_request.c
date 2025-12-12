@@ -60,6 +60,12 @@ static web_request_status curl_code_to_web_request_status(const CURLcode code) {
     case CURLE_COULDNT_CONNECT:
     case CURLE_SEND_ERROR:
     case CURLE_RECV_ERROR:
+    case CURLE_SSL_CONNECT_ERROR:
+    case CURLE_PEER_FAILED_VERIFICATION:
+    case CURLE_BAD_CONTENT_ENCODING:
+    case CURLE_USE_SSL_FAILED:
+    case CURLE_SSL_ENGINE_INITFAILED:
+    case CURLE_SSL_ISSUER_ERROR:
         return WEB_REQUEST_STATUS_CONNECT_ERROR;
 
     case CURLE_WEIRD_SERVER_REPLY:
@@ -72,22 +78,12 @@ static web_request_status curl_code_to_web_request_status(const CURLcode code) {
     case CURLE_HTTP3:
     case CURLE_TOO_LARGE:
     case CURLE_SEND_FAIL_REWIND:
+    case CURLE_REMOTE_FILE_NOT_FOUND:
         return WEB_REQUEST_STATUS_DOWNLOAD_ERROR;
 
-    case CURLE_REMOTE_ACCESS_DENIED:
-    case CURLE_REMOTE_FILE_NOT_FOUND:
-        return WEB_REQUEST_STATUS_FILE_INACCESSIBLE;
 
     case CURLE_OPERATION_TIMEDOUT:
         return WEB_REQUEST_STATUS_TIMEOUT;
-
-    case CURLE_SSL_CONNECT_ERROR:
-    case CURLE_PEER_FAILED_VERIFICATION:
-    case CURLE_BAD_CONTENT_ENCODING:
-    case CURLE_USE_SSL_FAILED:
-    case CURLE_SSL_ENGINE_INITFAILED:
-    case CURLE_SSL_ISSUER_ERROR:
-        return WEB_REQUEST_STATUS_SSL_ERROR;
 
     case CURLE_WRITE_ERROR:
     case CURLE_OUT_OF_MEMORY:
@@ -99,9 +95,17 @@ static web_request_status curl_code_to_web_request_status(const CURLcode code) {
 }
 
 web_request_status web_request(const char *url, byte_array *buffer, const unsigned long timeout) {
-    if (!strncasecmp(url, HTTP_URL_START, strlen(HTTP_URL_START))
-        && !strncasecmp(url, HTTPS_URL_START, strlen(HTTPS_URL_START))) {
+    if (strncasecmp(url, HTTP_URL_START, strlen(HTTP_URL_START)) != 0
+        && strncasecmp(url, HTTPS_URL_START, strlen(HTTPS_URL_START)) != 0) {
         return WEB_REQUEST_STATUS_INVALID_PROTOCOL;
+    }
+
+    static bool initialized = false;
+    if (!initialized) {
+        const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
+        if (result != CURLE_OK) {
+            return curl_code_to_web_request_status(result);
+        }
     }
 
     CURL *client = curl_easy_init();
@@ -120,11 +124,6 @@ web_request_status web_request(const char *url, byte_array *buffer, const unsign
 
     const CURLcode result = curl_easy_perform(client);
     curl_easy_cleanup(client);
-    return curl_code_to_web_request_status(result);
-}
-
-web_request_status setup_web_request() {
-    const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
     return curl_code_to_web_request_status(result);
 }
 
