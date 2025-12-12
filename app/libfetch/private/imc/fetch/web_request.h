@@ -26,21 +26,43 @@
 #include <stdint.h>
 #include <imc/common/byte_array.h>
 
+/// Status codes of the web_request function
+/// @note These codes are not final, and may change at any time, and are not necessarily accurate to the underlying
+///       problem
+typedef enum web_request_status : uint8_t {
+    /// Download went successfully
+    WEB_REQUEST_STATUS_OK,
+    /// Setup was unsuccessful
+    WEB_REQUEST_STATUS_SETUP_ERROR,
+    /// URL was improperly formatted
+    WEB_REQUEST_STATUS_BAD_URL,
+    /// Request was not http or https
+    WEB_REQUEST_STATUS_INVALID_PROTOCOL,
+    /// Host could not be reached
+    WEB_REQUEST_STATUS_HOST_UNREACHABLE,
+    /// Connection to the host failed
+    WEB_REQUEST_STATUS_CONNECT_ERROR,
+    /// Downloading the file failed
+    WEB_REQUEST_STATUS_DOWNLOAD_ERROR,
+    /// Download took too long
+    WEB_REQUEST_STATUS_TIMEOUT,
+    /// There was insufficient memory to download the file
+    /// @note This is catastrophic
+    WEB_REQUEST_STATUS_OUT_OF_MEMORY,
+    /// Catch-all error for errors that shouldn't happen
+    WEB_REQUEST_STATUS_OTHER
+} web_request_status;
+
+constexpr unsigned long DEFAULT_TIMEOUT = 300'000;
+
 /// Gets a file from a url to memory
 /// @param url The url to download
 /// @param buffer Pointer to where the downloaded data will be put
-/// @return Whether the web request was successful
-bool web_request_memory(const char *url, byte_array *buffer);
-
-/// Gets a file from a url to another file
-/// @param url The url to download
-/// @param file File where the data will be saved to
-/// @return Whether the web request was successful
-bool web_request_file(const char *url, FILE *file);
-
-/// Performs necessary setup operations for web_request
-/// @return Whether the setup was successful
-bool setup_web_request();
+/// @param timeout Maximum number of milliseconds the web request can take <br/>
+///                If set to 0, no timeout will be set
+///                If set to < 0, the default value will be used
+/// @return The web request's status code
+web_request_status web_request(const char *url, byte_array *buffer, unsigned long timeout);
 
 /// Performs necessary cleanup operations for web_request
 /// @note To be performed <b>only</b> after the last web request

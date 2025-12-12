@@ -26,50 +26,105 @@
 #include <curl/curl.h>
 
 const char *const CURL_USERAGENT = "libcurl-agent/1.0";
+const char *const HTTP_URL_START = "http://";
+const char *const HTTPS_URL_START = "https://";
 
+/// Helper that writes the bytes downloaded by curl to memory
 static size_t write_to_memory(const void *contents, const size_t element, const size_t number, void *data) {
     byte_array *buffer = data;
     const size_t size = number * element;
-    free_byte_array(buffer);
-    *buffer = alloc_byte_array(size);
+    if (buffer->data == nullptr) {
+        *buffer = alloc_byte_array(size);
+    } else if (buffer->size != size) {
+        resize_byte_array(buffer, size);
+    }
     memcpy(buffer->data, contents, size);
     return size;
 }
 
-static CURLcode web_request_inner(CURL *client, const char *url, void *write_data, const bool use_callback) {
-    curl_easy_setopt(client, CURLOPT_URL, url);
-    if (use_callback) {
-        curl_easy_setopt(client, CURLOPT_WRITEFUNCTION, write_to_memory);
+/// Helper that converts a possible CURLcode to a web_request_status
+static web_request_status curl_code_to_web_request_status(const CURLcode code) {
+    switch (code) {
+    case CURLE_OK:
+        return WEB_REQUEST_STATUS_OK;
+
+    case CURLE_FAILED_INIT:
+        return WEB_REQUEST_STATUS_SETUP_ERROR;
+
+    case CURLE_URL_MALFORMAT:
+        return WEB_REQUEST_STATUS_BAD_URL;
+
+    case CURLE_COULDNT_RESOLVE_HOST:
+        return WEB_REQUEST_STATUS_HOST_UNREACHABLE;
+
+    case CURLE_COULDNT_CONNECT:
+    case CURLE_SEND_ERROR:
+    case CURLE_RECV_ERROR:
+    case CURLE_SSL_CONNECT_ERROR:
+    case CURLE_PEER_FAILED_VERIFICATION:
+    case CURLE_BAD_CONTENT_ENCODING:
+    case CURLE_USE_SSL_FAILED:
+    case CURLE_SSL_ENGINE_INITFAILED:
+    case CURLE_SSL_ISSUER_ERROR:
+        return WEB_REQUEST_STATUS_CONNECT_ERROR;
+
+    case CURLE_WEIRD_SERVER_REPLY:
+    case CURLE_HTTP2:
+    case CURLE_PARTIAL_FILE:
+    case CURLE_HTTP_RETURNED_ERROR:
+    case CURLE_BAD_DOWNLOAD_RESUME:
+    case CURLE_TOO_MANY_REDIRECTS:
+    case CURLE_GOT_NOTHING:
+    case CURLE_HTTP3:
+    case CURLE_TOO_LARGE:
+    case CURLE_SEND_FAIL_REWIND:
+    case CURLE_REMOTE_FILE_NOT_FOUND:
+        return WEB_REQUEST_STATUS_DOWNLOAD_ERROR;
+
+
+    case CURLE_OPERATION_TIMEDOUT:
+        return WEB_REQUEST_STATUS_TIMEOUT;
+
+    case CURLE_WRITE_ERROR:
+    case CURLE_OUT_OF_MEMORY:
+        return WEB_REQUEST_STATUS_OUT_OF_MEMORY;
+
+    default:
+        return WEB_REQUEST_STATUS_OTHER;
     }
-    curl_easy_setopt(client, CURLOPT_WRITEDATA, write_data);
+}
+
+web_request_status web_request(const char *url, byte_array *buffer, const unsigned long timeout) {
+    if (strncasecmp(url, HTTP_URL_START, strlen(HTTP_URL_START)) != 0
+        && strncasecmp(url, HTTPS_URL_START, strlen(HTTPS_URL_START)) != 0) {
+        return WEB_REQUEST_STATUS_INVALID_PROTOCOL;
+    }
+
+    static bool initialized = false;
+    if (!initialized) {
+        const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
+        if (result != CURLE_OK) {
+            return curl_code_to_web_request_status(result);
+        }
+    }
+
+    CURL *client = curl_easy_init();
+    if (client == nullptr) {
+        return false;
+    }
+    curl_easy_setopt(client, CURLOPT_URL, url);
+    curl_easy_setopt(client, CURLOPT_WRITEFUNCTION, write_to_memory);
+    if (timeout != 0) {
+        curl_easy_setopt(client, CURLOPT_TIMEOUT_MS, timeout < 0 ? DEFAULT_TIMEOUT : timeout);
+    }
+
+    curl_easy_setopt(client, CURLOPT_FAILONERROR, 1);
+    curl_easy_setopt(client, CURLOPT_WRITEDATA, buffer);
     curl_easy_setopt(client, CURLOPT_USERAGENT, CURL_USERAGENT);
 
     const CURLcode result = curl_easy_perform(client);
     curl_easy_cleanup(client);
-    return result;
-}
-
-bool web_request_memory(const char *url, byte_array *buffer) {
-    CURL *client = curl_easy_init();
-    if (client == nullptr) {
-        return false;
-    }
-    const CURLcode result = web_request_inner(client, url, buffer, true);
-    return result == CURLE_OK;
-}
-
-bool web_request_file(const char *url, FILE *file) {
-    CURL *client = curl_easy_init();
-    if (client == nullptr) {
-        return false;
-    }
-    const CURLcode result = web_request_inner(client, url, file, false);
-    return result == CURLE_OK;
-}
-
-bool setup_web_request() {
-    const CURLcode res = curl_global_init(CURL_GLOBAL_ALL);
-    return res == CURLE_OK;
+    return curl_code_to_web_request_status(result);
 }
 
 void cleanup_web_request() {
