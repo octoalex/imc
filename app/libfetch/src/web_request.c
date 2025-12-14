@@ -32,99 +32,93 @@ const char *const HTTPS_URL_START = "https://";
 /// Helper that writes the bytes downloaded by curl to memory
 static size_t write_to_memory(const void *contents, const size_t element, const size_t number, void *data) {
     byte_array *buffer = data;
+    const size_t base = buffer->size;
     const size_t size = number * element;
     if (buffer->data == nullptr) {
         *buffer = alloc_byte_array(size);
-    } else if (buffer->size != size) {
-        resize_byte_array(buffer, size);
+        // insufficient data, abort function
+        if (buffer->data == nullptr) {
+            return CURL_WRITEFUNC_ERROR;
+        }
+    } else {
+        resize_byte_array(buffer, buffer->size + size);
+        // insufficient memory, abort function
+        if (buffer->size == 0) {
+            return CURL_WRITEFUNC_ERROR;
+        }
     }
-    memcpy(buffer->data, contents, size);
+    memcpy(buffer->data + base, contents, size);
     return size;
 }
 
-/// Helper that converts a possible CURLcode to a web_request_status
-static web_request_status curl_code_to_web_request_status(const CURLcode code) {
-    switch (code) {
-    case CURLE_OK:
-        return WEB_REQUEST_STATUS_OK;
-
-    case CURLE_FAILED_INIT:
-        return WEB_REQUEST_STATUS_SETUP_ERROR;
-
-    case CURLE_URL_MALFORMAT:
-        return WEB_REQUEST_STATUS_BAD_URL;
-
-    case CURLE_COULDNT_RESOLVE_HOST:
-        return WEB_REQUEST_STATUS_HOST_UNREACHABLE;
-
-    case CURLE_COULDNT_CONNECT:
-    case CURLE_SEND_ERROR:
-    case CURLE_RECV_ERROR:
-    case CURLE_SSL_CONNECT_ERROR:
-    case CURLE_PEER_FAILED_VERIFICATION:
-    case CURLE_BAD_CONTENT_ENCODING:
-    case CURLE_USE_SSL_FAILED:
-    case CURLE_SSL_ENGINE_INITFAILED:
-    case CURLE_SSL_ISSUER_ERROR:
-        return WEB_REQUEST_STATUS_CONNECT_ERROR;
-
-    case CURLE_WEIRD_SERVER_REPLY:
-    case CURLE_HTTP2:
-    case CURLE_PARTIAL_FILE:
-    case CURLE_HTTP_RETURNED_ERROR:
-    case CURLE_BAD_DOWNLOAD_RESUME:
-    case CURLE_TOO_MANY_REDIRECTS:
-    case CURLE_GOT_NOTHING:
-    case CURLE_HTTP3:
-    case CURLE_TOO_LARGE:
-    case CURLE_SEND_FAIL_REWIND:
-    case CURLE_REMOTE_FILE_NOT_FOUND:
-        return WEB_REQUEST_STATUS_DOWNLOAD_ERROR;
-
-
-    case CURLE_OPERATION_TIMEDOUT:
-        return WEB_REQUEST_STATUS_TIMEOUT;
-
-    case CURLE_WRITE_ERROR:
-    case CURLE_OUT_OF_MEMORY:
-        return WEB_REQUEST_STATUS_OUT_OF_MEMORY;
-
-    default:
-        return WEB_REQUEST_STATUS_OTHER;
-    }
-}
-
 web_request_status web_request(const char *url, byte_array *buffer, const unsigned long timeout) {
+    web_request_status status = {
+        .code = -1,
+        .message = nullptr
+    };
     if (strncasecmp(url, HTTP_URL_START, strlen(HTTP_URL_START)) != 0
         && strncasecmp(url, HTTPS_URL_START, strlen(HTTPS_URL_START)) != 0) {
-        return WEB_REQUEST_STATUS_INVALID_PROTOCOL;
+        status.status = WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL;
+        return status;
     }
 
     static bool initialized = false;
     if (!initialized) {
         const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
         if (result != CURLE_OK) {
-            return curl_code_to_web_request_status(result);
+            status.status = WEB_REQUEST_STATUS_SETUP_FAILED;
+            status.code = result;
+            status.message = curl_easy_strerror(result);
+            return status;
         }
     }
 
     CURL *client = curl_easy_init();
     if (client == nullptr) {
-        return false;
+        status.status = WEB_REQUEST_STATUS_FAILED;
+        return status;
     }
+
+    // create error message buffer
+    status.message = calloc(CURL_ERROR_SIZE + 1, sizeof(char));
+
+    // set the options
     curl_easy_setopt(client, CURLOPT_URL, url);
     curl_easy_setopt(client, CURLOPT_WRITEFUNCTION, write_to_memory);
+    curl_easy_setopt(client, CURLOPT_WRITEDATA, buffer);
+    curl_easy_setopt(client, CURLOPT_FAILONERROR, true);
+    curl_easy_setopt(client, CURLOPT_USERAGENT, CURL_USERAGENT);
+    curl_easy_setopt(client, CURLOPT_ERRORBUFFER, status.message);
     if (timeout != 0) {
         curl_easy_setopt(client, CURLOPT_TIMEOUT_MS, timeout < 0 ? DEFAULT_TIMEOUT : timeout);
     }
 
-    curl_easy_setopt(client, CURLOPT_FAILONERROR, 1);
-    curl_easy_setopt(client, CURLOPT_WRITEDATA, buffer);
-    curl_easy_setopt(client, CURLOPT_USERAGENT, CURL_USERAGENT);
-
     const CURLcode result = curl_easy_perform(client);
     curl_easy_cleanup(client);
-    return curl_code_to_web_request_status(result);
+    status.code = result;
+    switch (result) {
+    case CURLE_OK:
+        status.status = WEB_REQUEST_STATUS_SUCCESS;
+        break;
+
+    case CURLE_URL_MALFORMAT:
+        status.status = WEB_REQUEST_STATUS_BAD_URL;
+        break;
+
+    case CURLE_FAILED_INIT:
+        status.status = WEB_REQUEST_STATUS_SETUP_FAILED;
+        break;
+
+    case CURLE_OUT_OF_MEMORY:
+    case CURLE_WRITE_ERROR:
+        status.status = WEB_REQUEST_STATUS_OUT_OF_MEMORY;
+        break;
+
+    default:
+        status.status = WEB_REQUEST_STATUS_FAILED;
+        break;
+    }
+    return status;
 }
 
 void cleanup_web_request() {
