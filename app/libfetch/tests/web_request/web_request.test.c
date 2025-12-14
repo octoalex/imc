@@ -29,10 +29,10 @@ int main() {
     const web_request_status status = web_request(TEST_URL, &buffer, DEFAULT_TIMEOUT);
     cleanup_web_request();
 
-    if (status == WEB_REQUEST_STATUS_SETUP_ERROR) {
+    if (status.status == WEB_REQUEST_STATUS_SETUP_FAILED) {
         fprintf(stderr, "Web Request setup has failed!\n");
         return -1;
-    } else if (status != WEB_REQUEST_STATUS_OK) {
+    } else if (status.status != WEB_REQUEST_STATUS_SUCCESS) {
         // web_request has failed, abort
         fprintf(stderr, "Web Request has failed!\n");
         return -1;
