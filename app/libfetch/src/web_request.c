@@ -62,13 +62,14 @@ web_request_status web_request(const char *url, byte_array *buffer, const unsign
         return status;
     }
 
+    status.message = calloc(CURL_ERROR_SIZE + 1, sizeof(char));
     static bool initialized = false;
     if (!initialized) {
         const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
         if (result != CURLE_OK) {
             status.status = WEB_REQUEST_STATUS_SETUP_FAILED;
             status.code = result;
-            status.message = curl_easy_strerror(result);
+            strcpy((char *)status.message, curl_easy_strerror(result));
             return status;
         }
     }
@@ -78,9 +79,6 @@ web_request_status web_request(const char *url, byte_array *buffer, const unsign
         status.status = WEB_REQUEST_STATUS_FAILED;
         return status;
     }
-
-    // create error message buffer
-    status.message = calloc(CURL_ERROR_SIZE + 1, sizeof(char));
 
     // set the options
     curl_easy_setopt(client, CURLOPT_URL, url);
