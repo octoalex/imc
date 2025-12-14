@@ -26,41 +26,43 @@
 #include <stdint.h>
 #include <imc/common/byte_array.h>
 
-/// Status codes of the web_request function
-/// @note These codes are not final, and may change at any time, and are not necessarily accurate to the underlying
-///       problem
-typedef enum web_request_status : uint8_t {
-    /// Download went successfully
-    WEB_REQUEST_STATUS_OK,
-    /// Setup was unsuccessful
-    WEB_REQUEST_STATUS_SETUP_ERROR,
-    /// URL was improperly formatted
-    WEB_REQUEST_STATUS_BAD_URL,
-    /// Request was not http or https
-    WEB_REQUEST_STATUS_INVALID_PROTOCOL,
-    /// Host could not be reached
-    WEB_REQUEST_STATUS_HOST_UNREACHABLE,
-    /// Connection to the host failed
-    WEB_REQUEST_STATUS_CONNECT_ERROR,
-    /// Downloading the file failed
-    WEB_REQUEST_STATUS_DOWNLOAD_ERROR,
-    /// Download took too long
-    WEB_REQUEST_STATUS_TIMEOUT,
-    /// There was insufficient memory to download the file
-    /// @note This is catastrophic
-    WEB_REQUEST_STATUS_OUT_OF_MEMORY,
-    /// Catch-all error for errors that shouldn't happen
-    WEB_REQUEST_STATUS_OTHER
+/// The status of the web request
+typedef struct web_request_status {
+    /// Simple status codes describing how the operation went
+    enum {
+        /// The request was successful
+        WEB_REQUEST_STATUS_SUCCESS,
+        /// The protocol was not HTTP or HTTPS
+        WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL,
+        /// The url was poorly formatted
+        WEB_REQUEST_STATUS_BAD_URL,
+        /// The setup failed
+        /// @note For more information, see @link code@endlink
+        WEB_REQUEST_STATUS_SETUP_FAILED,
+        /// The download failed
+        /// @note For more information, see @link code@endlink
+        WEB_REQUEST_STATUS_FAILED,
+        /// The function ran out of memory while downloading the file
+        /// @note This is catastrophic
+        WEB_REQUEST_STATUS_OUT_OF_MEMORY
+    } status;
+    /// Implementation defined error code
+    int code;
+    /// If the underlying implementation allows for a human-readable error description, it can be found here
+    /// @note @code free()@endcode must be manually called on it
+    const char *message;
 } web_request_status;
 
+/// Default timeout for @link web_request@endlink
 constexpr unsigned long DEFAULT_TIMEOUT = 300'000;
 
 /// Gets a file from a url to memory
 /// @param url The url to download
 /// @param buffer Pointer to where the downloaded data will be put
 /// @param timeout Maximum number of milliseconds the web request can take <br/>
-///                If set to 0, no timeout will be set
-///                If set to < 0, the default value will be used
+///                If set to 0, the default value will be used
+///                If set to < 0, no timeout will be set
+/// @note Supports only HTTP and HTTPS
 /// @return The web request's status code
 web_request_status web_request(const char *url, byte_array *buffer, unsigned long timeout);
 
