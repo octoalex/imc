@@ -61,3 +61,22 @@ byte_array copy_byte_array(const byte_array *base) {
     memcpy(new.data, base->data, new.size);
     return new;
 }
+
+byte_array from_c_string(const char *string) {
+    const size_t size = strlen(string);
+    const byte_array new = {
+        .data = malloc(size * sizeof(uint8_t)),
+        .size = size
+    };
+    memcpy(new.data, string, size);
+    return new;
+}
+
+byte_array from_data(const uint8_t *data, const size_t size) {
+    const byte_array new = {
+        .data = malloc(size * sizeof(uint8_t)),
+        .size = size
+    };
+    memcpy(new.data, data, size);
+    return new;
+}
