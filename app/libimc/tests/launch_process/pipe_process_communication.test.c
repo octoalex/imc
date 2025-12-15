@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <imc/libimc/launch_process.h>
+#include <imc/common/pipe.h>
 
 // simple strings
 const char *const IN_STRING = "This is an input";
@@ -43,31 +44,35 @@ int main(const int argc, const char *argv[]) {
     if (argc == 1) {
         // parent mode
 
-        // create pipes
-        int in_pipe[2];
-        int out_pipe[2];
-        int err_pipe[2];
-        pipe(in_pipe);
-        pipe(out_pipe);
-        pipe(err_pipe);
-
         // in files
-        FILE *in_child = fdopen(in_pipe[0], "r");
-        FILE *in_parent = fdopen(in_pipe[1], "w");
+        FILE *in_child;
+        FILE *in_parent;
+        if (!create_pipe(&in_child, &in_parent)) {
+            fprintf(stderr, "Failure to create input pipe!\n");
+            return -1;
+        }
+
+        // out files
+        FILE *out_child;
+        FILE *out_parent;
+        if (!create_pipe(&out_parent, &out_child)) {
+            fprintf(stderr, "Failure to create output pipe!\n");
+            return -1;
+        }
+
+        // err files
+        FILE *err_child;
+        FILE *err_parent;
+        if (!create_pipe(&err_parent, &err_child)) {
+            fprintf(stderr, "Failure to error output pipe!\n");
+            return -1;
+        }
 
         // Here's the fix discussed later down
         // by default, it seems like the file is opened in full buffer mode (unclear why), so it has to be manually set
         // here to buffer by line
         char *buffer = calloc(IO_BUFFER_SIZE, sizeof(char));
         setvbuf(in_parent, buffer, _IOLBF, IO_BUFFER_SIZE);
-
-        // out files
-        FILE *out_child = fdopen(out_pipe[1], "w");
-        FILE *out_parent = fdopen(out_pipe[0], "r");
-
-        // err files
-        FILE *err_child = fdopen(err_pipe[1], "w");
-        FILE *err_parent = fdopen(err_pipe[0], "r");
 
         // generation of 2 randoms
         // srand will do, there's no issue with using a low security random, because this isn't tied to security

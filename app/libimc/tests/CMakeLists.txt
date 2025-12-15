@@ -29,6 +29,7 @@ add_test(NAME process_file_descriptor_inheritance COMMAND process_file_descripto
 
 # This tests setting custom STDIN, STDOUT and STDERR
 add_test_executable(imc::libimc pipe_process_communication launch_process/pipe_process_communication.test.c)
+target_link_libraries(pipe_process_communication PRIVATE imc::libcommon)
 add_test(NAME pipe_process_communication COMMAND pipe_process_communication)
 set_tests_properties(pipe_process_communication PROPERTIES TIMEOUT 3)
 
