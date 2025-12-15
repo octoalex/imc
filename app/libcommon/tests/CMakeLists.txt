@@ -66,3 +66,16 @@ add_test(NAME make_dirs_cleanup COMMAND rm -r a e)
 set_tests_properties(make_dirs PROPERTIES FIXTURES_REQUIRED make_dirs)
 set_tests_properties(make_dirs_setup is_dir PROPERTIES FIXTURES_SETUP make_dirs)
 set_tests_properties(make_dirs_cleanup PROPERTIES FIXTURES_CLEANUP make_dirs)
+
+##############
+##############
+##############
+ ###      ###
+ ### Pipe ###
+ ###      ###
+ ###      ###
+ ###      ###
+
+add_test_executable(imc::libcommon pipe pipe/pipe.test.c)
+add_test(NAME pipe COMMAND pipe)
+set_tests_properties(pipe PROPERTIES TIMEOUT 3)
