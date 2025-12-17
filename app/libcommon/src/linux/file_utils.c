@@ -24,7 +24,9 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <libgen.h>
+
+const char DIR_SEPARATOR = '/';
 
 constexpr mode_t STANDARD_MODE = 0755;
 
@@ -74,4 +76,8 @@ bool can_write(const char *path) {
 
 bool can_execute(const char *path) {
     return access(path, X_OK) == 0;
+}
+
+char *get_parent_dir(const char *path) {
+    return dirname((char *)path);
 }
