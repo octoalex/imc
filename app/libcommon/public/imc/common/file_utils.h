@@ -55,7 +55,9 @@ bool can_execute(const char *path);
 
 /// Gets the parent directory of the given path, or an empty string if the path points to the root
 /// @param path The path from where the parent directory will be found
-/// @return The parent directory's path
+/// @return The parent directory's path <br/>
+///         This path will never terminate with /, unless it's the root directory
+///         The string must be manually freed
 char *get_parent_dir(const char *path);
 
 #endif //IMC_FILE_UTILS_H

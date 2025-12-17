@@ -79,5 +79,10 @@ bool can_execute(const char *path) {
 }
 
 char *get_parent_dir(const char *path) {
-    return dirname((char *)path);
+    char *buffer = strdup(path);
+    char *parent = dirname(buffer);
+    if (parent != buffer) {
+        free(buffer);
+    }
+    return parent;
 }
