@@ -65,6 +65,7 @@ web_request_status web_request(const char *url, byte_array *buffer, const unsign
     status.message = calloc(CURL_ERROR_SIZE + 1, sizeof(char));
     static bool initialized = false;
     if (!initialized) {
+        initialized = true;
         const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
         if (result != CURLE_OK) {
             status.status = WEB_REQUEST_STATUS_SETUP_FAILED;
@@ -87,8 +88,8 @@ web_request_status web_request(const char *url, byte_array *buffer, const unsign
     curl_easy_setopt(client, CURLOPT_FAILONERROR, true);
     curl_easy_setopt(client, CURLOPT_USERAGENT, CURL_USERAGENT);
     curl_easy_setopt(client, CURLOPT_ERRORBUFFER, status.message);
-    if (timeout != 0) {
-        curl_easy_setopt(client, CURLOPT_TIMEOUT_MS, timeout < 0 ? DEFAULT_TIMEOUT : timeout);
+    if (timeout != -1) {
+        curl_easy_setopt(client, CURLOPT_TIMEOUT_MS, timeout == 0 ? DEFAULT_TIMEOUT : timeout);
     }
 
     const CURLcode result = curl_easy_perform(client);

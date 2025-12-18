@@ -69,4 +69,15 @@ void resize_byte_array(byte_array *array, size_t new_size);
 ///          calls @code memcpy@endcode to copy the bytes over.
 byte_array copy_byte_array(const byte_array *base);
 
+/// Creates a byte array from a C (null terminated) string
+/// @param string The C (null terminated) string
+/// @return A byte array with a copy of the string
+byte_array from_c_string(const char *string);
+
+/// Creates a byte array from an array of bytes and an associated size
+/// @param data The array of bytes
+/// @param size The associated size of the array of bytes
+/// @returns A byte array with a copy of the given data
+byte_array from_data(const uint8_t *data, size_t size);
+
 #endif //IMC_BYTE_ARRAY_H
