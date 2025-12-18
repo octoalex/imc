@@ -60,4 +60,13 @@ bool can_execute(const char *path);
 ///         The string must be manually freed
 char *get_parent_dir(const char *path);
 
+/// Removes useless and/or redundant elements from a path.
+/// @details Simple @code .@endcode directories are removed (for example, @code a/./b@endcode becomes
+///          @code a/b@endcode), and "up" nodes such as @code ..@endcode eliminate the previous directory, unless there
+///          is nothing to be eliminated (for example, @code a/../b@endcode becomes @code b@endcode)
+/// @param path The path
+/// @return The cleaned up path, never with a trailing @code /@endcode
+/// @note Returned path must be manually freed
+char *clean_path(const char *path);
+
 #endif //IMC_FILE_UTILS_H
