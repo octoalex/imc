@@ -50,6 +50,20 @@ set_tests_properties(
 )
 set_tests_properties(cleanup_files PROPERTIES FIXTURES_CLEANUP file_utils)
 
+### path operations ###
+
+# test clean_path
+add_test_executable(imc::libcommon clean_path file_utils/clean_path.test.c)
+add_test(NAME clean_path COMMAND clean_path)
+
+# test get_parent_dir
+add_test_executable(imc::libcommon get_parent_dir file_utils/get_parent_dir.test.c)
+add_test(NAME get_parent_dir COMMAND get_parent_dir)
+
+# set fixtures for functions that rely on clean paths
+set_tests_properties(get_parent_dir PROPERTIES FIXTURES_REQUIRED clean_paths)
+set_tests_properties(clean_path PROPERTIES FIXTURES_SETUP clean_paths)
+
 ### make_dirs ###
 
 # setup for make_dirs
@@ -62,16 +76,13 @@ add_test(NAME make_dirs COMMAND make_dirs)
 # cleanup make_dirs
 add_test(NAME make_dirs_cleanup COMMAND rm -r a e)
 
+# clone of clean_path for tests
+add_test(NAME clean_path_make_dirs COMMAND clean_path)
+
 # set fixtures for make_dirs
 set_tests_properties(make_dirs PROPERTIES FIXTURES_REQUIRED make_dirs)
-set_tests_properties(make_dirs_setup is_dir PROPERTIES FIXTURES_SETUP make_dirs)
+set_tests_properties(make_dirs_setup clean_path_make_dirs PROPERTIES FIXTURES_SETUP make_dirs)
 set_tests_properties(make_dirs_cleanup PROPERTIES FIXTURES_CLEANUP make_dirs)
-
-### path operations ###
-
-# test clean_path
-add_test_executable(imc::libcommon clean_path file_utils/clean_path.test.c)
-add_test(NAME clean_path COMMAND clean_path)
 
 ##############
 ##############
