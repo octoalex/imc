@@ -78,12 +78,3 @@ bool can_write(const char *path) {
 bool can_execute(const char *path) {
     return access(path, X_OK) == 0;
 }
-
-char *get_parent_dir(const char *path) {
-    char *buffer = clean_path(path);
-    char *parent = dirname(buffer);
-    if (parent != buffer) {
-        free(buffer);
-    }
-    return parent;
-}

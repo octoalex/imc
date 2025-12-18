@@ -98,3 +98,42 @@ char *clean_path(const char *path) {
     trim(&cleaned);
     return cleaned;
 }
+
+char *get_parent_dir(const char *path) {
+    // clean the path
+    char *parent = clean_path(path);
+    char *separator = strrchr(parent, DIR_SEPARATOR);
+    if (separator != nullptr && separator != parent) {
+        size_t no = 1;
+        const char *part = get_part(separator, &no);
+        if (strcmp(part, PATH_UP) == 0) {
+            char *extended = realloc(parent, strlen(parent) + 4);
+            if (extended == nullptr) {
+                free((void *)part);
+                free(parent);
+                return nullptr;
+            }
+            parent = extended;
+            parent[strlen(parent)] = DIR_SEPARATOR;
+            strcpy(parent + strlen(parent), PATH_UP);
+        } else {
+            *separator = '\0';
+        }
+        free((void *)part);
+    } else {
+        const bool absolute = parent[0] == DIR_SEPARATOR;
+        const bool up = parent[0] == '.' == !absolute && strlen(parent) == 1;
+        const bool upper = strcmp(parent + absolute, PATH_UP) == 0;
+        if (up) {
+            strcpy(parent + absolute, PATH_UP);
+        } else if (upper) {
+            strcpy(parent + absolute, PATH_UP);
+            parent[absolute + 2] = DIR_SEPARATOR;
+            strcpy(parent + absolute + 3, PATH_UP);
+        } else if (!absolute) {
+            strcpy(parent, PATH_SELF);
+        }
+    }
+    trim(&parent);
+    return parent;
+}
