@@ -23,6 +23,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+const char *const PATH_UP = "..";
+const char *const PATH_SELF = ".";
+
 static const char *get_part(const char *path, size_t *base) {
     const char *ptr = strchr(path + *base, DIR_SEPARATOR);
     const size_t position = ptr != nullptr ? ptr - path : strlen(path);
@@ -41,6 +44,13 @@ static void add_part(char* cleaned, size_t *insertion, const char* part) {
     *insertion += strlen(part);
 }
 
+static void trim(char **ptr) {
+    char *new = realloc(*ptr, strlen(*ptr) + 1);
+    if (new != nullptr) {
+        *ptr = new;
+    }
+}
+
 char *clean_path(const char *path) {
     const size_t size = strlen(path);
     char *cleaned = calloc(sizeof(char), size);
@@ -52,9 +62,8 @@ char *clean_path(const char *path) {
     size_t offset = absolute;
     do {
         const char *part = get_part(path, &offset);
-        if (strcmp(part, "..") == 0) {
+        if (strcmp(part, PATH_UP) == 0) {
             // most complex case
-            const size_t cleaned_size = strlen(cleaned);
 
             // since all removable .. parts are guaranteed to have been removed up to this point, then if the last part
             // is an .. part, it must be because all parts in the cleared path are ..
@@ -66,7 +75,7 @@ char *clean_path(const char *path) {
             // proper last part getter
             const char *cleaned_part = get_part(last != nullptr ? last : cleaned, &no);
 
-            if (strcmp(cleaned_part, "..") == 0 || strlen(cleaned) == absolute) {
+            if (strcmp(cleaned_part, PATH_UP) == 0 || strlen(cleaned) == absolute) {
                 // add the part to the buffer
                 add_part(cleaned, &insertion, part);
             } else if (last != nullptr) {
@@ -78,18 +87,14 @@ char *clean_path(const char *path) {
             }
 
             free((void *)cleaned_part);
-        } else if (strcmp(part, ".") != 0) {
+        } else if (strcmp(part, PATH_SELF) != 0) {
             add_part(cleaned, &insertion, part);
         }
         free((void *)part);
     } while (offset < size);
     if (strlen(cleaned) == 0) {
-        cleaned[0] = '.';
-        cleaned[1] = '\0';
+        strcpy(cleaned, PATH_SELF);
     }
-    char *re = realloc(cleaned, strlen(cleaned) + 1);
-    if (re != nullptr) {
-        cleaned = re;
-    }
+    trim(&cleaned);
     return cleaned;
 }
