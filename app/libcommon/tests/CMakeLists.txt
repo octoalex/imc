@@ -67,6 +67,12 @@ set_tests_properties(make_dirs PROPERTIES FIXTURES_REQUIRED make_dirs)
 set_tests_properties(make_dirs_setup is_dir PROPERTIES FIXTURES_SETUP make_dirs)
 set_tests_properties(make_dirs_cleanup PROPERTIES FIXTURES_CLEANUP make_dirs)
 
+### path operations ###
+
+# test clean_path
+add_test_executable(imc::libcommon clean_path file_utils/clean_path.test.c)
+add_test(NAME clean_path COMMAND clean_path)
+
 ##############
 ##############
 ##############
