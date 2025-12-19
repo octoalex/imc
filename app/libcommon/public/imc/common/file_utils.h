@@ -22,6 +22,8 @@
 #ifndef IMC_FILE_UTILS_H
 #define IMC_FILE_UTILS_H
 
+extern const char DIR_SEPARATOR;
+
 /// Create a series of nested directories
 /// @param path All the directories to create
 void make_dirs(const char *path);
@@ -50,5 +52,21 @@ bool can_write(const char *path);
 /// @param path The file to check
 /// @return Whether the file can be executed
 bool can_execute(const char *path);
+
+/// Gets the parent directory of the given path, or an empty string if the path points to the root
+/// @param path The path from where the parent directory will be found
+/// @return The parent directory's path <br/>
+///         This path will never terminate with /, unless it's the root directory
+///         The string must be manually freed
+char *get_parent_dir(const char *path);
+
+/// Removes useless and/or redundant elements from a path.
+/// @details Simple @code .@endcode directories are removed (for example, @code a/./b@endcode becomes
+///          @code a/b@endcode), and "up" nodes such as @code ..@endcode eliminate the previous directory, unless there
+///          is nothing to be eliminated (for example, @code a/../b@endcode becomes @code b@endcode)
+/// @param path The path
+/// @return The cleaned up path, never with a trailing @code /@endcode
+/// @note Returned path must be manually freed
+char *clean_path(const char *path);
 
 #endif //IMC_FILE_UTILS_H

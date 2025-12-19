@@ -24,23 +24,26 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <libgen.h>
+
+const char DIR_SEPARATOR = '/';
 
 constexpr mode_t STANDARD_MODE = 0755;
 
 void make_dirs(const char *path) {
-    char *buffer = calloc(strlen(path) + 1, sizeof(char));
+    const char *clean = clean_path(path);
+    char *buffer = calloc(strlen(clean) + 1, sizeof(char));
     char *ptr;
     size_t offset = 0;
-    const size_t size = strlen(path);
+    const size_t size = strlen(clean);
     do {
         // get the subdirectory
         // get the position of the next directory separator
-        ptr = strchr(path + offset + 1, '/');
+        ptr = strchr(clean + offset + 1, DIR_SEPARATOR);
         // get the position
-        const size_t end = ptr == nullptr ? size - 1 : ptr - path;
+        const size_t end = ptr == nullptr ? size - 1 : ptr - clean;
         // copy only the new bytes
-        memcpy(buffer + offset, path + offset, end - offset + 1);
+        memcpy(buffer + offset, clean + offset, end - offset + 1);
 
         // check if the subdirectory exists
         if (!is_dir(buffer)) {
