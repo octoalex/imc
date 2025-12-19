@@ -20,7 +20,7 @@
  */
 
 #include <imc/common/file_utils.h>
-#include "file_names.h"
+#include "names.test.h"
 
 int main() {
     return can_execute(ACCESSIBLE_PATH) && !can_execute(INACCESSIBLE_PATH) && !can_execute(NOT_FILE_PATH) ? 0 : -1;
