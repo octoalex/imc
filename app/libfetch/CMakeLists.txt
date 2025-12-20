@@ -22,7 +22,6 @@ target_sources(
 
         PRIVATE
         src/web_request.c
-        src/fetch.c
 
         PUBLIC
         FILE_SET libfetch_public_headers
@@ -38,7 +37,7 @@ target_sources(
 # libfyaml is included in source through git submodules, so there's no need to find the package
 #find_package(libfyaml REQUIRED)
 
-target_link_libraries(libfetch PRIVATE curl libfyaml::libfyaml PUBLIC imc::libcommon)
+target_link_libraries(libfetch PRIVATE curl PUBLIC imc::libcommon)
 
 add_library(imc::libfetch ALIAS libfetch)
 

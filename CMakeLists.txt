@@ -18,6 +18,7 @@ cmake_minimum_required(VERSION 3.23)
 project(imc VERSION 0.0.0)
 
 include(cmake/test_functions.cmake)
+include(cmake/target_functions.cmake)
 
 if(${BUILD_TESTING})
     enable_testing()

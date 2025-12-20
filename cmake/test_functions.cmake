@@ -18,6 +18,8 @@ function(add_test_executable test_target name sources)
 
     target_compile_features(${name} PRIVATE c_std_23)
 
+    target_enable_warnings(${name})
+
     target_sources(
             ${name}
 

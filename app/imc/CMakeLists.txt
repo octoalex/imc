@@ -19,6 +19,8 @@ add_executable(imc)
 
 target_compile_features(imc PRIVATE c_std_23)
 
+target_enable_warnings(imc)
+
 target_sources(
         imc
 
