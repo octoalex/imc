@@ -18,6 +18,10 @@ cmake_minimum_required(VERSION 3.23)
 project(imc VERSION 0.0.0)
 
 include(cmake/test_functions.cmake)
+include(cmake/target_functions.cmake)
+
+option(BUILD_TESTING "Enable tests" ON)
+option(CMAKE_COMPILE_WARNING_AS_ERROR "Warnings get turned into errors" ON)
 
 if(${BUILD_TESTING})
     enable_testing()

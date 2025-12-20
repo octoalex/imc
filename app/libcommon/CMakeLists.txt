@@ -17,6 +17,8 @@ add_library(libcommon)
 
 target_compile_features(libcommon PRIVATE c_std_23)
 
+target_enable_warnings(libcommon)
+
 target_sources(
         libcommon
 

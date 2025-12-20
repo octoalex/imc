@@ -21,6 +21,8 @@ configure_file(public/imc/libimc/config.in.h public/imc/libimc/config.h)
 
 target_compile_features(libimc PRIVATE c_std_23)
 
+target_enable_warnings(libimc)
+
 target_sources(
         libimc
 
