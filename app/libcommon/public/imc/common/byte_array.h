@@ -29,6 +29,8 @@
 /// An array of bytes
 /// @note It is recommended to allocate it with @code alloc_byte_array(size_t)@endcode and to deallocate it with
 ///       @code free_byte_array(byte_array *)@endcode <br/>
+/// @warning <b>ALWAYS</b> create with @link alloc_byte_array@endlink, or @link EMPTY_BYTE_ARRAY@endlink and
+///          <b>NEVER</b> leave to its default value, as it will most likely be initialized to junk values
 /// @details To allocate, deallocate, resize and copy manually, see the aforementioned functions' implementation details
 typedef struct byte_array {
     /// The bytes
@@ -36,6 +38,9 @@ typedef struct byte_array {
     /// The number of bytes
     size_t size;
 } byte_array;
+
+/// Empty byte array
+constexpr byte_array EMPTY_BYTE_ARRAY = { .data = nullptr, .size = 0 };
 
 /// Allocates a zeroed byte array
 /// @param size The size of the array
