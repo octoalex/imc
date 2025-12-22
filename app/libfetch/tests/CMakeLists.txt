@@ -31,3 +31,25 @@ set_tests_properties(curl_cleanup PROPERTIES FIXTURES_CLEANUP web_request)
 # Check if web_request accepts http and https, and refuses other protocols
 add_test_executable(imc::libfetch web_request_errors web_request/web_request_errors.test.c)
 add_test(NAME web_request_errors COMMAND web_request_errors)
+
+### Hash ###
+
+# test hash validation
+add_test_executable(imc::libfetch hash_validation hash/hash_validation.test.c)
+add_test(NAME hash_validation COMMAND hash_validation)
+
+# test hash comparison
+add_test_executable(imc::libfetch hash_comparison hash/hash_comparison.test.c)
+add_test(NAME hash_comparison COMMAND hash_comparison)
+
+# test hash calculation
+add_test_executable(imc::libfetch hash_calculation hash/hash_calculation.test.c)
+add_test(NAME hash_calculation COMMAND hash_calculation)
+
+# fixtures for comparison
+set_tests_properties(hash_comparison PROPERTIES FIXTURES_REQUIRED requires_hash_validation)
+set_tests_properties(hash_validation PROPERTIES FIXTURES_SETUP requires_hash_validation)
+
+# fixtures for calculation
+set_tests_properties(hash_calculation PROPERTIES FIXTURES_REQUIRED requires_hash_comparison)
+set_tests_properties(hash_comparison PROPERTIES FIXTURES_SETUP requires_hash_comparison)

@@ -22,6 +22,7 @@ target_sources(
 
         PRIVATE
         src/web_request.c
+        src/hash.c
 
         PUBLIC
         FILE_SET libfetch_public_headers
