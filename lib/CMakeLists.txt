@@ -13,6 +13,12 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+# Set variables for json-c
+
+set(BUILD_SHARED_LIBS OFF)
+set(BUILD_STATIC_LIBS ON)
+set(DISABLE_STATIC_FPIC ON)
+
 FetchContent_Declare(json-c
         GIT_REPOSITORY https://github.com/json-c/json-c.git
         GIT_REMOTE_NAME origin
