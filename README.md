@@ -45,8 +45,12 @@ git clone https://github.com/octoalex/imc.git
 mkdir imc/cmake-build-release
 cd imc/cmake-build-release
 # Configure
-cmake -G Ninja -D CMAKE_C_COMPILER=clang -D BUILD_TESTING=OFF -D CMAKE_COMPILE_WARNING_AS_ERROR=OFF \
-      -D CMAKE_BUILD_TYPE=Release ..
+cmake ..                                    \
+      -G Ninja                              \
+      -D CMAKE_C_COMPILER=clang             \
+      -D BUILD_TESTING=OFF                  \
+      -D CMAKE_COMPILE_WARNING_AS_ERROR=OFF \
+      -D CMAKE_BUILD_TYPE=Release
 # Build
 cmake --build .
 if [ $? -eq 0 ]; then

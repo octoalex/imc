@@ -109,7 +109,7 @@ To run tests (e.g. to make sure that the program will run *mostly* correctly on 
 is necessary
 
 ```bash
-ctest --test-dir cmake-build-rlease/ --output-on-failure
+ctest --test-dir cmake-build-release/ --output-on-failure
 ```
 
 `cmake-build-release` should be substituted with the same directory where the project was build into
