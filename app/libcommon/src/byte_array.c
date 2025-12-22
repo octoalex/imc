@@ -41,6 +41,10 @@ void free_byte_array(byte_array *array) {
     array->size = 0;
 }
 
+void free_byte_array_unsafe(const byte_array array) {
+    free(array.data);
+}
+
 void resize_byte_array(byte_array *array, const size_t new_size) {
     uint8_t *new_data = realloc(array->data, new_size);
     if (new_data == nullptr) {
