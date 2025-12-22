@@ -34,9 +34,6 @@ target_sources(
         BASE_DIRS private
 )
 
-# libfyaml is included in source through git submodules, so there's no need to find the package
-#find_package(libfyaml REQUIRED)
-
 target_link_libraries(libfetch PRIVATE curl PUBLIC imc::libcommon)
 
 add_library(imc::libfetch ALIAS libfetch)

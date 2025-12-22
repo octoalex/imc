@@ -19,6 +19,7 @@ project(imc VERSION 0.0.0)
 
 include(cmake/test_functions.cmake)
 include(cmake/target_functions.cmake)
+include(FetchContent)
 
 option(BUILD_TESTING "Enable tests" ON)
 option(CMAKE_COMPILE_WARNING_AS_ERROR "Warnings get turned into errors" ON)
