@@ -34,7 +34,9 @@ target_sources(
         BASE_DIRS private
 )
 
-target_link_libraries(libfetch PRIVATE curl PUBLIC imc::libcommon)
+find_package(OpenSSL REQUIRED)
+
+target_link_libraries(libfetch PRIVATE curl OpenSSL::Crypto PUBLIC imc::libcommon)
 
 add_library(imc::libfetch ALIAS libfetch)
 
