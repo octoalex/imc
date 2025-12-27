@@ -69,4 +69,14 @@ char *get_parent_dir(const char *path);
 /// @note Returned path must be manually freed
 char *clean_path(const char *path);
 
+/// Gets the timestamp of when the file was last modified
+/// @param path The path of the file
+/// @return The timestamp
+struct timespec get_modified_timestamp(const char *path);
+
+/// Gets the timestamp of when the file was last accessed
+/// @param path The path of the file
+/// @return The timestamp
+struct timespec get_access_timestamp(const char *path);
+
 #endif //IMC_FILE_UTILS_H
