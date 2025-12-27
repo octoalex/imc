@@ -20,7 +20,7 @@
  */
 
 #include <imc/fetch/web_request.h>
-#include "common.test.h"
+#include "../common.test.h"
 
 const char *const HTTP_URL = "http://www.example.com/";
 const char *const FTP_URL = "ftp://ftp.example.com";

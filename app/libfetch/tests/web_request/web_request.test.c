@@ -21,9 +21,9 @@
 
 #include <imc/fetch/web_request.h>
 #include <stdlib.h>
-#include "common.test.h"
+#include "../common.test.h"
 
-
+constexpr size_t COMPARE_SIZE = 32;
 
 static void print_special_char(const char c) {
     switch (c) {
