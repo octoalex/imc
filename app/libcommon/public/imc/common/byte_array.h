@@ -58,6 +58,13 @@ byte_array alloc_byte_array(size_t size);
 ///          passed to some function, it will not cause any illegal memory accesses
 void free_byte_array(byte_array *array);
 
+/// Deallocates a byte array, without setting the passed array to a safe empty value
+/// @param array The array to free
+/// @note Does not set the array to an empty value
+/// @detail Works exactly like @link free_byte_array@endlink, but unlike it, it leaves the array in a potentially unsafe
+///         state. Function created to free const byte_arrays
+void free_byte_array_unsafe(byte_array array);
+
 /// Resize a byte array
 /// @param array The array to resize
 /// @param new_size The size to resize the array to

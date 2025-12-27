@@ -16,16 +16,25 @@
  */
 
 /*
- * Created by octoalex on 02/12/2025.
+ * Created by octoalex on 22/12/2025.
  */
 
-#ifndef IMC_COMMON_TEST_H
-#define IMC_COMMON_TEST_H
-
 #include <stdio.h>
+#include <imc/fetch/hash.h>
+#include "hashes.test.h"
 
-const char *const TEST_URL = "https://www.example.com/";
-const char *const CURL_FILE_PATH = "curl.html";
-constexpr size_t COMPARE_SIZE = 32;
+int main() {
+    const hash test_hashes[] = TEST_HASHES();
+    constexpr size_t count = sizeof(test_hashes) / sizeof(hash);
 
-#endif //IMC_COMMON_TEST_H
+    bool any = false;
+    for (size_t i = 0; i < count; ++i) {
+        if (is_hash_valid(&test_hashes[i]) != VALIDITY[i]) {
+            any = true;
+            fprintf(stderr, "Hash %ld is %s, but is_hash_valid found it to be %s!\n",
+                i, index_to_name(i), !VALIDITY[i] ? "valid" : "invalid"
+            );
+        }
+    }
+    return any ? -1 : 0;
+}

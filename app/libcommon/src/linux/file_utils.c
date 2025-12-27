@@ -78,3 +78,15 @@ bool can_write(const char *path) {
 bool can_execute(const char *path) {
     return access(path, X_OK) == 0;
 }
+
+struct timespec get_modified_timestamp(const char *path) {
+    struct stat attr;
+    stat(path, &attr);
+    return attr.st_mtim;
+}
+
+struct timespec get_access_timestamp(const char *path) {
+    struct stat attr;
+    stat(path, &attr);
+    return attr.st_atim;
+}
