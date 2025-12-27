@@ -23,6 +23,8 @@ target_sources(
         PRIVATE
         src/web_request.c
         src/hash.c
+        src/fetch.c
+        src/fetch_format.c
 
         PUBLIC
         FILE_SET libfetch_public_headers
@@ -37,7 +39,7 @@ target_sources(
 
 find_package(OpenSSL REQUIRED)
 
-target_link_libraries(libfetch PRIVATE curl OpenSSL::Crypto PUBLIC imc::libcommon)
+target_link_libraries(libfetch PRIVATE curl OpenSSL::Crypto PUBLIC imc::libcommon json-c::json-c)
 
 add_library(imc::libfetch ALIAS libfetch)
 

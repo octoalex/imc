@@ -17,7 +17,7 @@
 
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_STATIC_LIBS ON)
-set(DISABLE_STATIC_FPIC ON)
+set(DISABLE_STATIC_FPIC OFF)
 
 FetchContent_Declare(json-c
         GIT_REPOSITORY https://github.com/json-c/json-c.git
