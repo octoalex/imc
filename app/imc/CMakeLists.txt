@@ -23,21 +23,22 @@ target_compile_features(imc PRIVATE c_std_23)
 
 target_enable_warnings(imc)
 
-target_sources(
-        imc
+target_sources(imc
+  PRIVATE
+    src/linux/launch_process.c
 
-        PRIVATE
-        src/linux/launch_process.c
+  PUBLIC
+    FILE_SET imc_public_headers
+    TYPE HEADERS
+    BASE_DIRS
+      public
+      "${CMAKE_CURRENT_BINARY_DIR}/public"
 
-        PUBLIC
-        FILE_SET imc_public_headers
-        TYPE HEADERS
-        BASE_DIRS public "${CMAKE_CURRENT_BINARY_DIR}/public"
-
-        PRIVATE
-        FILE_SET imc_private_headers
-        TYPE HEADERS
-        BASE_DIRS private
+  PRIVATE
+    FILE_SET imc_private_headers
+    TYPE HEADERS
+    BASE_DIRS
+      private
 )
 
 target_link_libraries(imc PRIVATE m imc::fetch imc::common)

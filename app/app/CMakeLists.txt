@@ -21,16 +21,15 @@ target_compile_features(app PRIVATE c_std_23)
 
 target_enable_warnings(app)
 
-target_sources(
-        app
+target_sources(app
+  # both src files and headers are private
+  PRIVATE
+    src/main.c
 
-        # both src files and headers are private
-        PRIVATE
-        src/main.c
-
-        PRIVATE
-        FILE_SET HEADERS
-        BASE_DIRS private
+  PRIVATE
+    FILE_SET HEADERS
+    BASE_DIRS
+      private
 )
 
 target_link_libraries(app PRIVATE imc::imc)

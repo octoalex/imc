@@ -19,19 +19,17 @@ target_compile_features(common PRIVATE c_std_23)
 
 target_enable_warnings(common)
 
-target_sources(
-        common
+target_sources(common
+  PRIVATE
+    src/byte_array.c
+    src/linux/file_utils.c
+    src/file_utils.c
+    src/linux/pipe.c
 
-        PRIVATE
-        src/byte_array.c
-        src/linux/file_utils.c
-        src/file_utils.c
-        src/linux/pipe.c
-
-        PUBLIC
-        FILE_SET common_public_headers
-        TYPE HEADERS
-        BASE_DIRS public
+  PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS
+      public
 )
 
 add_library(imc::common ALIAS common)

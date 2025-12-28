@@ -45,8 +45,8 @@ add_test(NAME cleanup_files COMMAND rm -rf dir accessible inaccessible)
 # set fixtures
 set_tests_properties(is_dir is_file can_read can_write can_execute PROPERTIES FIXTURES_REQUIRED file_utils)
 set_tests_properties(
-        create_base_directory create_files file_access_all file_access_none
-        PROPERTIES FIXTURES_SETUP file_utils
+  create_base_directory create_files file_access_all file_access_none
+  PROPERTIES FIXTURES_SETUP file_utils
 )
 set_tests_properties(cleanup_files PROPERTIES FIXTURES_CLEANUP file_utils)
 

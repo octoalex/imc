@@ -23,7 +23,7 @@ add_test(NAME is_process_alive COMMAND is_process_alive)
 
 # This tests if file descriptors are inherited by launched processes
 add_test_executable(
-        imc::imc process_file_descriptor_inheritance launch_process/process_file_descriptor_inheritance.test.c
+  imc::imc process_file_descriptor_inheritance launch_process/process_file_descriptor_inheritance.test.c
 )
 add_test(NAME process_file_descriptor_inheritance COMMAND process_file_descriptor_inheritance)
 
