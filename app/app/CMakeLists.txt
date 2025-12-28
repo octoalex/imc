@@ -18,9 +18,7 @@
 add_executable(app)
 
 target_compile_features(app PRIVATE c_std_23)
-
 target_enable_warnings(app)
-
 target_sources(app
   # both src files and headers are private
   PRIVATE

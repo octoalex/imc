@@ -16,7 +16,6 @@
 add_library(fetch)
 
 target_compile_features(fetch PRIVATE c_std_23)
-
 target_sources(fetch
   PRIVATE
     src/web_request.c
@@ -38,7 +37,6 @@ target_sources(fetch
 )
 
 find_package(OpenSSL REQUIRED)
-
 target_link_libraries(fetch PRIVATE curl OpenSSL::Crypto PUBLIC imc::common json-c::json-c)
 
 add_library(imc::fetch ALIAS fetch)

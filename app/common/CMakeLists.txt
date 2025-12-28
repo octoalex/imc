@@ -16,9 +16,7 @@
 add_library(common)
 
 target_compile_features(common PRIVATE c_std_23)
-
 target_enable_warnings(common)
-
 target_sources(common
   PRIVATE
     src/byte_array.c

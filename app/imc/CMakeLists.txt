@@ -20,9 +20,7 @@ add_library(imc)
 configure_file(public/imc/imc/config.in.h public/imc/imc/config.h)
 
 target_compile_features(imc PRIVATE c_std_23)
-
 target_enable_warnings(imc)
-
 target_sources(imc
   PRIVATE
     src/linux/launch_process.c
