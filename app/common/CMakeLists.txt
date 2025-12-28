@@ -13,35 +13,27 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# This directory contains the launcher logic
+add_library(common)
 
-add_library(libimc)
+target_compile_features(common PRIVATE c_std_23)
 
-configure_file(public/imc/libimc/config.in.h public/imc/libimc/config.h)
-
-target_compile_features(libimc PRIVATE c_std_23)
-
-target_enable_warnings(libimc)
+target_enable_warnings(common)
 
 target_sources(
-        libimc
+        common
 
         PRIVATE
-        src/linux/launch_process.c
+        src/byte_array.c
+        src/linux/file_utils.c
+        src/file_utils.c
+        src/linux/pipe.c
 
         PUBLIC
-        FILE_SET libimc_public_headers
+        FILE_SET common_public_headers
         TYPE HEADERS
-        BASE_DIRS public "${CMAKE_CURRENT_BINARY_DIR}/public"
-
-        PRIVATE
-        FILE_SET libimc_private_headers
-        TYPE HEADERS
-        BASE_DIRS private
+        BASE_DIRS public
 )
 
-target_link_libraries(libimc PRIVATE m imc::libfetch imc::libcommon)
-
-add_library(imc::libimc ALIAS libimc)
+add_library(imc::common ALIAS common)
 
 add_subdirectory(tests)

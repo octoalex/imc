@@ -22,7 +22,7 @@
 // This test checks if file descriptors are inherited by launched process
 
 #include <stdlib.h>
-#include <imc/libimc/launch_process.h>
+#include <imc/imc/launch_process.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 

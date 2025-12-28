@@ -21,7 +21,7 @@
 
 #include <limits.h>
 #include <signal.h>
-#include <imc/libimc/launch_process.h>
+#include <imc/imc/launch_process.h>
 
 int main(const int argc, const char *argv[]) {
     if (argc > 2) {

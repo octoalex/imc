@@ -13,9 +13,11 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# This directory contains the cli frontend of the app
+# This directory contains the launcher logic
 
-add_executable(imc)
+add_library(imc)
+
+configure_file(public/imc/imc/config.in.h public/imc/imc/config.h)
 
 target_compile_features(imc PRIVATE c_std_23)
 
@@ -24,13 +26,22 @@ target_enable_warnings(imc)
 target_sources(
         imc
 
-        # both src files and headers are private
         PRIVATE
-        src/main.c
+        src/linux/launch_process.c
+
+        PUBLIC
+        FILE_SET imc_public_headers
+        TYPE HEADERS
+        BASE_DIRS public "${CMAKE_CURRENT_BINARY_DIR}/public"
 
         PRIVATE
-        FILE_SET HEADERS
+        FILE_SET imc_private_headers
+        TYPE HEADERS
         BASE_DIRS private
 )
 
-target_link_libraries(imc PRIVATE imc::libimc)
+target_link_libraries(imc PRIVATE m imc::fetch imc::common)
+
+add_library(imc::imc ALIAS imc)
+
+add_subdirectory(tests)

@@ -13,27 +13,26 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-add_library(libcommon)
+# This directory contains the cli frontend of the app
 
-target_compile_features(libcommon PRIVATE c_std_23)
+add_executable(app)
 
-target_enable_warnings(libcommon)
+target_compile_features(app PRIVATE c_std_23)
+
+target_enable_warnings(app)
 
 target_sources(
-        libcommon
+        app
+
+        # both src files and headers are private
+        PRIVATE
+        src/main.c
 
         PRIVATE
-        src/byte_array.c
-        src/linux/file_utils.c
-        src/file_utils.c
-        src/linux/pipe.c
-
-        PUBLIC
-        FILE_SET libcommon_public_headers
-        TYPE HEADERS
-        BASE_DIRS public
+        FILE_SET HEADERS
+        BASE_DIRS private
 )
 
-add_library(imc::libcommon ALIAS libcommon)
+target_link_libraries(app PRIVATE imc::imc)
 
-add_subdirectory(tests)
+set_target_properties(app PROPERTIES OUTPUT_NAME imc)

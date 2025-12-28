@@ -24,7 +24,7 @@
 #include <dirent.h>
 #include <math.h>
 #include <stdlib.h>
-#include <imc/libimc/launch_process.h>
+#include <imc/imc/launch_process.h>
 #include <imc/common/file_utils.h>
 #include <sys/wait.h>
 

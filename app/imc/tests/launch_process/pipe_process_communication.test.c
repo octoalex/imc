@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include <imc/libimc/launch_process.h>
+#include <imc/imc/launch_process.h>
 #include <imc/common/pipe.h>
 
 // simple strings

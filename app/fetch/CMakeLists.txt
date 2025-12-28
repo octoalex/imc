@@ -13,12 +13,12 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-add_library(libfetch)
+add_library(fetch)
 
-target_compile_features(libfetch PRIVATE c_std_23)
+target_compile_features(fetch PRIVATE c_std_23)
 
 target_sources(
-        libfetch
+        fetch
 
         PRIVATE
         src/web_request.c
@@ -27,20 +27,20 @@ target_sources(
         src/fetch_format.c
 
         PUBLIC
-        FILE_SET libfetch_public_headers
+        FILE_SET fetch_public_headers
         TYPE HEADERS
         BASE_DIRS public
 
         PRIVATE
-        FILE_SET libfetch_private_headers
+        FILE_SET fetch_private_headers
         TYPE HEADERS
         BASE_DIRS private
 )
 
 find_package(OpenSSL REQUIRED)
 
-target_link_libraries(libfetch PRIVATE curl OpenSSL::Crypto PUBLIC imc::libcommon json-c::json-c)
+target_link_libraries(fetch PRIVATE curl OpenSSL::Crypto PUBLIC imc::common json-c::json-c)
 
-add_library(imc::libfetch ALIAS libfetch)
+add_library(imc::fetch ALIAS fetch)
 
 add_subdirectory(tests)

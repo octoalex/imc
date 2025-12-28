@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <imc/libimc/launch_process.h>
+#include <imc/imc/launch_process.h>
 #include <linux/limits.h>
 
 int main(const int argc, const char *argv[]) {

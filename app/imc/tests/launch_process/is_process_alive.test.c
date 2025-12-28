@@ -16,47 +16,44 @@
  */
 
 /*
- * Created by octoalex on 22/11/2025.
+ * Created by octoalex on 23/11/2025.
  */
 
-#include <stdlib.h>
-#include <time.h>
-#include <imc/libimc/launch_process.h>
-
-constexpr int RANDOM_MAX_VALUE = 99;
-constexpr int RANDOM_MIN_VALUE = 10;
+#include <imc/imc/launch_process.h>
 
 int main(const int argc, const char *argv[]) {
-    if (argc > 2) {
-        fprintf(stderr, "Incorrect number of arguments! Expected 0 or 1, got %d\n", argc - 1);
+    if (argc > 1) {
+        fprintf(stderr, "Incorrect number of arguments! Expected 0, got %d\n", argc - 1);
         return -1;
     }
 
     if (argc == 1) {
         // parent mode
-        // preparing random specific value
-        srand(time(nullptr));
-        const int random = rand() % (RANDOM_MAX_VALUE - RANDOM_MIN_VALUE + 1) + RANDOM_MIN_VALUE;
-
-        char random_string[3] = { };
-        sprintf(random_string, "%d", random);
-
         const char *command[] = {
             *argv,
-            random_string,
+            // dummy necessary to trigger child mode
+            "dummy argument",
             nullptr
         };
 
-        // launch process in the simplest way
         const pid_t process = launch_process(command, nullptr, nullptr, nullptr, nullptr);
 
-        // wait for the process now
-        bool was_killed;
-        const int exit_code = wait_process(process, &was_killed);
+        const bool alive = is_process_alive(process);
 
-        return !was_killed && exit_code == random ? 0 : -1;
+        // wait for process natural termination
+        bool was_killed;
+        wait_process(process, &was_killed);
+
+        if (was_killed) {
+            fprintf(stderr, "Child was killed!\n");
+            return -1;
+        }
+
+        const bool dead = is_process_alive(process);
+
+        // check that when the child was supposed to be alive, it was, and then when it was supposed to be dead, it was
+        return alive && !dead ? 0 : -1;
     } else {
-        const int random = (int) strtol(argv[1], nullptr, 10);
-        return random;
+        return 0;
     }
 }
