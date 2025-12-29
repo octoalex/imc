@@ -24,8 +24,13 @@ include(FetchContent)
 option(BUILD_TESTING "Enable tests" ON)
 option(CMAKE_COMPILE_WARNING_AS_ERROR "Warnings get turned into errors" ON)
 
+set(SYSTEM_ID ${CMAKE_SYSTEM_NAME})
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  set(SYSTEM_TYPE Linux)
+endif ()
+
 if(${BUILD_TESTING})
-    enable_testing()
+  enable_testing()
 endif()
 
 add_subdirectory(app)

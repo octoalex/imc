@@ -15,7 +15,7 @@
 
 # This directory exists with the purpose of adding all subdirectories
 
+add_subdirectory(app)
 add_subdirectory(imc)
-add_subdirectory(libimc)
-add_subdirectory(libfetch)
-add_subdirectory(libcommon)
+add_subdirectory(fetch)
+add_subdirectory(common)

@@ -20,9 +20,9 @@ set(BUILD_STATIC_LIBS ON)
 set(DISABLE_STATIC_FPIC OFF)
 
 FetchContent_Declare(json-c
-        GIT_REPOSITORY https://github.com/json-c/json-c.git
-        GIT_REMOTE_NAME origin
-        GIT_TAG origin/master
+  GIT_REPOSITORY https://github.com/json-c/json-c.git
+  GIT_REMOTE_NAME origin
+  GIT_TAG origin/master
 )
 FetchContent_MakeAvailable(json-c)
 add_library(json-c::json-c ALIAS json-c)

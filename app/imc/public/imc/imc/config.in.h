@@ -30,6 +30,10 @@ constexpr int VERSION_PATCH = @imc_VERSION_PATCH@;
 
 const char *const COMPILER_ID = "@CMAKE_C_COMPILER_ID@";
 
-const char *const SYSTEM_NAME = "@CMAKE_SYSTEM_NAME@";
+/// The specific toolchain against which the application is compiled for
+const char *const SYSTEM_ID = "@SYSTEM_ID@";
+
+/// The ultimate os on which the application is compiled for
+const char *const SYSTEM_TYPE = "@SYSTEM_TYPE@";
 
 #endif //IMC_CONFIG_IN_H

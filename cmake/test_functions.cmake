@@ -14,21 +14,21 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 function(add_test_executable test_target name sources)
-    add_executable(${name})
+  add_executable(${name})
 
-    target_compile_features(${name} PRIVATE c_std_23)
+  target_compile_features(${name} PRIVATE c_std_23)
 
-    target_enable_warnings(${name})
+  target_enable_warnings(${name})
 
-    target_sources(
-            ${name}
+  target_sources(${name}
+    PRIVATE
+      ${sources}
 
-            PRIVATE ${sources}
+    PRIVATE
+      FILE_SET HEADERS
+      BASE_DIRS
+        $<TARGET_PROPERTY:${test_target},INCLUDE_DIRECTORIES>
+  )
 
-            PRIVATE
-            FILE_SET HEADERS
-            BASE_DIRS $<TARGET_PROPERTY:${test_target},INCLUDE_DIRECTORIES>
-    )
-
-    target_link_libraries(${name} PRIVATE ${test_target})
+  target_link_libraries(${name} PRIVATE ${test_target})
 endfunction()
