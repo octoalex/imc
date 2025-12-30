@@ -54,6 +54,11 @@ hash get_hash(const byte_array *data, hash_type type);
 /// @return If the hash is valid
 bool is_hash_valid(const hash *hash);
 
+/// Checks if the hash is null
+/// @param hash The hash to check
+/// @return If the hash is null
+bool is_hash_null(const hash *hash);
+
 /// Compare if two hashes match
 /// @param lhs The first hash
 /// @param rhs The second hash
