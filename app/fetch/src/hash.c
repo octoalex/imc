@@ -59,6 +59,10 @@ bool is_hash_valid(const hash *hash) {
     return hash->bytes.size == get_hash_size(hash->type);
 }
 
+bool is_hash_null(const hash *hash) {
+    return hash->type == HASH_NULL && hash->bytes.data == nullptr && hash->bytes.size == 0;
+}
+
 bool compare_hash(const hash *lhs, const hash *rhs) {
     // both hashes must be valid
     if (!is_hash_valid(lhs) || !is_hash_valid(rhs)) {

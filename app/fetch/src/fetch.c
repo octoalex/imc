@@ -154,6 +154,6 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes) {
 }
 
 static bool validate(const resource *resource, const byte_array *bytes) {
-    if (resource->size != bytes->size) { return false; }
-    return validate_bytes(bytes, &resource->hash);
+    if (resource->size != 0 && resource->size != bytes->size) { return false; }
+    return !is_hash_null(&resource->hash) && validate_bytes(bytes, &resource->hash);
 }
