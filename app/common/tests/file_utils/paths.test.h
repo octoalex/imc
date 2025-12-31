@@ -57,7 +57,7 @@ const char *const PATH_MIXED_ABSOLUTE_TRAILING        = "/e/../f/../.././g/";
         fprintf(stderr, "Test " #type " failed! Expected \"%s\", got instead \"%s\"\n", base, buffer);                 \
         any_failed = true;                                                                                             \
     }                                                                                                                  \
-    free((void *)buffer);
+    free(buffer);
 
 #define TEST(function, type)                                                                                           \
     TEST_SINGLE(function, PATH_##type##_RELATIVE_OUTPUT, PATH_##type##_RELATIVE)                                       \

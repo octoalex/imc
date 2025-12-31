@@ -43,7 +43,7 @@ const char *const PATH_MIXED_ABSOLUTE_OUTPUT          = "/..";
 
 int main() {
     bool any_failed = false;
-    const char *buffer;
+    char *buffer;
 
     TEST(get_parent_dir, SIMPLE);
     TEST(get_parent_dir, SELF);
