@@ -23,6 +23,7 @@ target_sources(common
     src/linux/file_utils.c
     src/file_utils.c
     src/linux/pipe.c
+    src/status.c
 
   PUBLIC
     FILE_SET HEADERS

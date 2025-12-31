@@ -29,6 +29,9 @@ const char *const CURL_USERAGENT = "libcurl-agent/1.0";
 const char *const HTTP_URL_START = "http://";
 const char *const HTTPS_URL_START = "https://";
 
+// Error Messages
+const char *const ERROR_MESSAGE_BAD_PROTOCOL = "The protocol is not supported!";
+
 /// Helper that writes the bytes downloaded by curl to memory
 static size_t write_to_memory(const void *contents, const size_t element, const size_t number, void *data) {
     byte_array *buffer = data;
@@ -52,71 +55,56 @@ static size_t write_to_memory(const void *contents, const size_t element, const 
 }
 
 web_request_status web_request(const char *url, byte_array *buffer, const unsigned long timeout) {
-    web_request_status status = {
-        .code = -1,
-        .message = nullptr
-    };
     if (strncasecmp(url, HTTP_URL_START, strlen(HTTP_URL_START)) != 0
         && strncasecmp(url, HTTPS_URL_START, strlen(HTTPS_URL_START)) != 0) {
-        status.status = WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL;
+        const web_request_status status = {
+            .code = WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL,
+            .message = nullptr
+        };
         return status;
     }
 
-    status.message = calloc(CURL_ERROR_SIZE + 1, sizeof(char));
     static bool initialized = false;
     if (!initialized) {
         initialized = true;
         const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
         if (result != CURLE_OK) {
-            status.status = WEB_REQUEST_STATUS_SETUP_FAILED;
-            status.code = result;
-            strcpy((char *)status.message, curl_easy_strerror(result));
+            const web_request_status status = {
+                .code = WEB_REQUEST_STATUS_FAILED,
+                .message = strdup(curl_easy_strerror(result))
+            };
             return status;
         }
     }
 
     CURL *client = curl_easy_init();
     if (client == nullptr) {
-        status.status = WEB_REQUEST_STATUS_FAILED;
+        const web_request_status status = {
+            .code = WEB_REQUEST_STATUS_FAILED,
+            .message = nullptr
+        };
         return status;
     }
 
+    char *message = calloc(CURL_ERROR_SIZE + 1, sizeof(char));
     // set the options
     curl_easy_setopt(client, CURLOPT_URL, url);
     curl_easy_setopt(client, CURLOPT_WRITEFUNCTION, write_to_memory);
     curl_easy_setopt(client, CURLOPT_WRITEDATA, buffer);
     curl_easy_setopt(client, CURLOPT_FAILONERROR, true);
     curl_easy_setopt(client, CURLOPT_USERAGENT, CURL_USERAGENT);
-    curl_easy_setopt(client, CURLOPT_ERRORBUFFER, status.message);
+    curl_easy_setopt(client, CURLOPT_ERRORBUFFER, message);
     if (timeout != -1) {
         curl_easy_setopt(client, CURLOPT_TIMEOUT_MS, timeout == 0 ? DEFAULT_TIMEOUT : timeout);
     }
 
     const CURLcode result = curl_easy_perform(client);
     curl_easy_cleanup(client);
-    status.code = result;
-    switch (result) {
-    case CURLE_OK:
-        status.status = WEB_REQUEST_STATUS_SUCCESS;
-        break;
-
-    case CURLE_URL_MALFORMAT:
-        status.status = WEB_REQUEST_STATUS_BAD_URL;
-        break;
-
-    case CURLE_FAILED_INIT:
-        status.status = WEB_REQUEST_STATUS_SETUP_FAILED;
-        break;
-
-    case CURLE_OUT_OF_MEMORY:
-    case CURLE_WRITE_ERROR:
-        status.status = WEB_REQUEST_STATUS_OUT_OF_MEMORY;
-        break;
-
-    default:
-        status.status = WEB_REQUEST_STATUS_FAILED;
-        break;
-    }
+    const web_request_status status = {
+        .code = result == CURLE_OK ? WEB_REQUEST_STATUS_SUCCESS :
+            (result == CURLE_URL_MALFORMAT ? WEB_REQUEST_STATUS_BAD_URL : WEB_REQUEST_STATUS_FAILED),
+        .message = message
+    };
     return status;
 }
 
