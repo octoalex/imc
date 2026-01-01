@@ -27,28 +27,7 @@
 #include <imc/fetch/resource.h>
 #include <json.h>
 #include <stdio.h>
-
-typedef struct fetch_status {
-    /// The status of the fetch operation
-    enum {
-        /// The operation was successful
-        FETCH_STATUS_SUCCESS,
-        /// Downloading the resource was not possible
-        FETCH_STATUS_DOWNLOAD_FAILED,
-        /// Caching the resource was not possible
-        FETCH_STATUS_CACHING_FAILED,
-        /// Arguments were not properly formatted
-        FETCH_STATUS_BAD_ARGUMENTS,
-        /// The downloaded file does not match the resource
-        /// @note This is not triggered by an outdated cache, but if both the cache and the downloaded resource don't
-        ///       match
-        FETCH_STATUS_BAD_RESOURCE
-    } code;
-
-    /// The eventual message given by the failed step, null if there was no failure
-    /// @note Must always be manually freed
-    const char *NULLABLE message;
-} fetch_status;
+#include <imc/fetch/status_codes.h>
 
 /// Downloads a file off of the internet and caches it, or gets it from the cache, and returns it as a byte array
 /// @param resource The locations and metadata of the file to fetch

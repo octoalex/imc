@@ -34,7 +34,7 @@ const char *const ERROR_MESSAGE_NO_DIRECTORY_CACHE = "The cache's directory is i
 
 // Argument errors
 const char *const ERROR_MESSAGE_BAD_ARRAY = "Both the path and the array pointer were null!";
-const char *const ERROR_MESSAGE_BAD_PROTOCOL = "The protocol is not supported!";
+// Bad protocol has been moved to web_request.c, a more sensible place for them
 
 // Download errors
 const char *const ERROR_MESSAGE_BAD_RESOURCE = "The downloaded file does not match the given hash!"
@@ -113,20 +113,13 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes) {
 
     const web_request_status web_status = web_request(resource->url, buffer, DEFAULT_TIMEOUT);
 
-    if (web_status.status != WEB_REQUEST_STATUS_SUCCESS) {
-        fetch_status status = { };
-        if (web_status.status == WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL
-            || web_status.status == WEB_REQUEST_STATUS_BAD_URL) {
-            status.code = FETCH_STATUS_BAD_ARGUMENTS;
-        } else {
-            status.code = FETCH_STATUS_DOWNLOAD_FAILED;
-        }
-        if (web_status.status == WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL) {
-            status.message = strdup(ERROR_MESSAGE_BAD_PROTOCOL);
-        } else {
-            status.message = web_status.message;
-        }
+    if (web_status.code != WEB_REQUEST_STATUS_SUCCESS) {
         free_byte_array(buffer);
+        const fetch_status status = {
+            .code = web_status.code == WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL ||
+                    web_status.code == WEB_REQUEST_STATUS_BAD_URL ?
+                FETCH_STATUS_BAD_ARGUMENTS : FETCH_STATUS_DOWNLOAD_FAILED
+        };
         return status;
     }
 

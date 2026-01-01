@@ -43,7 +43,7 @@ const char *const PATH_MIXED_ABSOLUTE_OUTPUT          = "/../g";
 
 int main() {
     bool any_failed = false;
-    const char *buffer;
+    char *buffer;
 
     TEST(clean_path, SIMPLE);
     TEST(clean_path, SELF);

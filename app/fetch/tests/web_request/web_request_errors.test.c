@@ -48,6 +48,6 @@ int main() {
 }
 
 bool print_and_check(const char *name, const web_request_status returned, const int base) {
-    fprintf(stderr, "%s: got %d / (expected %d)\n", name, returned.status, base);
-    return (int)returned.status == base;
+    fprintf(stderr, "%s: got %d / (expected %d)\n", name, returned.code, base);
+    return (int)returned.code == base;
 }

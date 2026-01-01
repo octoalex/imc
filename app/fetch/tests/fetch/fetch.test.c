@@ -79,7 +79,7 @@ int main(const int argc, const char *argv[]) {
     if (status.message != nullptr) {
         fprintf(stderr, "%s\n", status.message);
     }
-    free((void *)status.message);
+    free(status.message);
 
     const bool was_successful = status.code == FETCH_STATUS_SUCCESS;
 

@@ -1,17 +1,17 @@
-/* 
+/*
  * This file is part of octoalex's imc (https://github.com/octoalex/imc).
  * Copyright (c) 2025 octoalex.
- * 
- * This program is free software: you can redistribute it and/or modify  
- * it under the terms of the GNU General Public License as published by  
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3.
  *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -22,36 +22,26 @@
 #ifndef IMC_WEB_REQUEST_H
 #define IMC_WEB_REQUEST_H
 
-#include <stdio.h>
-#include <stdint.h>
 #include <imc/common/byte_array.h>
+#include <imc/common/status.h>
+#include <imc/fetch/status_codes.h>
 
 /// The status of the web request
-typedef struct web_request_status {
-    /// Simple status codes describing how the operation went
-    enum {
-        /// The request was successful
-        WEB_REQUEST_STATUS_SUCCESS,
-        /// The protocol was not HTTP or HTTPS
-        WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL,
-        /// The url was poorly formatted
-        WEB_REQUEST_STATUS_BAD_URL,
-        /// The setup failed
-        /// @note For more information, see @link code@endlink
-        WEB_REQUEST_STATUS_SETUP_FAILED,
-        /// The download failed
-        /// @note For more information, see @link code@endlink
-        WEB_REQUEST_STATUS_FAILED,
-        /// The function ran out of memory while downloading the file
-        /// @note This is catastrophic
-        WEB_REQUEST_STATUS_OUT_OF_MEMORY
-    } status;
-    /// Implementation defined error code
-    int code;
-    /// If the underlying implementation allows for a human-readable error description, it can be found here
-    /// @note @code free()@endcode must be manually called on it
-    const char *message;
-} web_request_status;
+typedef status web_request_status;
+
+/// Status code enum for web_request
+/// @details This was originally more complex, however, since it's an internal function, and most of the status codes
+///          were translated into the generic FETCH_STATUS_DOWNLOAD_FAILED, it makes more sense to only report what's
+///          useful, which can be expanded if necessary. <br/>
+///          Furthermore, all the info the user cares about is encoded in the message field, so even these fields are
+///          usually ignored
+typedef enum web_request_status_code {
+    WEB_REQUEST_STATUS_SUCCESS = FETCH_STATUS_SUCCESS,
+    // Codes match, this may change in the future
+    WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL = FETCH_STATUS_BAD_ARGUMENTS,
+    WEB_REQUEST_STATUS_BAD_URL = FETCH_STATUS_BAD_ARGUMENTS,
+    WEB_REQUEST_STATUS_FAILED = FETCH_STATUS_DOWNLOAD_FAILED
+} web_request_status_code;
 
 /// Default timeout for @link web_request@endlink
 constexpr unsigned long DEFAULT_TIMEOUT = 300'000;

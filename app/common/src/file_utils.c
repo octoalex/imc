@@ -26,7 +26,7 @@
 const char *const PATH_UP = "..";
 const char *const PATH_SELF = ".";
 
-static const char *get_part(const char *path, size_t *base) {
+static char *get_part(const char *path, size_t *base) {
     const char *ptr = strchr(path + *base, DIR_SEPARATOR);
     const size_t position = ptr != nullptr ? ptr - path : strlen(path);
     char *part = calloc(position - *base + 1, sizeof(char));
@@ -61,7 +61,7 @@ char *clean_path(const char *path) {
     }
     size_t offset = absolute;
     do {
-        const char *part = get_part(path, &offset);
+        char *part = get_part(path, &offset);
         if (strcmp(part, PATH_UP) == 0) {
             // most complex case
 
@@ -73,7 +73,7 @@ char *clean_path(const char *path) {
             const bool shift = last != nullptr || absolute;
             size_t no = shift;
             // proper last part getter
-            const char *cleaned_part = get_part(last != nullptr ? last : cleaned, &no);
+            char *cleaned_part = get_part(last != nullptr ? last : cleaned, &no);
 
             if (strcmp(cleaned_part, PATH_UP) == 0 || strlen(cleaned) == absolute) {
                 // add the part to the buffer
@@ -86,11 +86,11 @@ char *clean_path(const char *path) {
                 insertion = absolute;
             }
 
-            free((void *)cleaned_part);
+            free(cleaned_part);
         } else if (strcmp(part, PATH_SELF) != 0) {
             add_part(cleaned, &insertion, part);
         }
-        free((void *)part);
+        free(part);
     } while (offset < size);
     if (strlen(cleaned) == 0) {
         strcpy(cleaned, PATH_SELF);
@@ -105,11 +105,11 @@ char *get_parent_dir(const char *path) {
     char *separator = strrchr(parent, DIR_SEPARATOR);
     if (separator != nullptr && separator != parent) {
         size_t no = 1;
-        const char *part = get_part(separator, &no);
+        char *part = get_part(separator, &no);
         if (strcmp(part, PATH_UP) == 0) {
             char *extended = realloc(parent, strlen(parent) + 4);
             if (extended == nullptr) {
-                free((void *)part);
+                free(part);
                 free(parent);
                 return nullptr;
             }
@@ -119,7 +119,7 @@ char *get_parent_dir(const char *path) {
         } else {
             *separator = '\0';
         }
-        free((void *)part);
+        free(part);
     } else {
         const bool absolute = parent[0] == DIR_SEPARATOR;
         const bool up = parent[0] == '.' == !absolute && strlen(parent) == 1;
