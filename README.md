@@ -30,7 +30,7 @@ not yet
 
 ## Building
 
-For a more complete guide, check out [the full guide](BUILDING.md)
+For a more complete guide, check out [the full guide](docs/BUILDING.md)
 
 For a quick build, find the section for your operating system, and just run the commands
 
@@ -54,7 +54,7 @@ cmake ..                                    \
 # Build
 cmake --build .
 if [ $? -eq 0 ]; then
-  echo "The Launcher built successfully! You can find it at app/imc/imc";
+  echo "The Launcher was built successfully! You can find it at app/imc/imc";
 fi
 ```
 
@@ -63,4 +63,6 @@ file executable by the way)
 
 ## License
 
-All software components are distributed under the GNU GPLv3 License found [here (file `/LICENSE`)](LICENSE)
+All software components are distributed under the GNU GPLv3 License found [here (file `LICENSE`)](LICENSE)
+
+All 3rd party software licenses and legal notices are found [here (file `NOTICES`)](NOTICES)
