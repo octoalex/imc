@@ -40,7 +40,7 @@ target_sources(imc
       private
 )
 if (${DISABLE_BUILD_ID})
-  target_compile_definitions(imc PRIVATE DISABLE_BUILD_ID)
+  target_compile_definitions(imc PUBLIC DISABLE_BUILD_ID)
 endif ()
 target_link_libraries(imc PRIVATE m imc::fetch imc::common)
 
