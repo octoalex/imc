@@ -24,6 +24,20 @@ include(FetchContent)
 option(BUILD_TESTING "Enable tests" ON)
 option(CMAKE_COMPILE_WARNING_AS_ERROR "Warnings get turned into errors" ON)
 
+if (${CMAKE_C_COMPILER_ID} STREQUAL "GNU" AND ${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  option(DISABLE_BUILD_ID "Unique id for each build" OFF)
+elseif (NOT ${DISABLE_BUILD_ID})
+  message("Build ids are not supported for compiler \"${CMAKE_C_COMPILER_ID}\", disabling them")
+  set(DISABLE_BUILD_ID ON)
+endif ()
+
+string(TIMESTAMP ${CMAKE_PROJECT_NAME}_CONFIGURE_TIMESTAMP)
+set(${CMAKE_PROJECT_NAME}_GENERATED_DISCLAIMER "/*
+ * File generated at ${${CMAKE_PROJECT_NAME}_CONFIGURE_TIMESTAMP}
+ * Please do not edit
+ */"
+)
+
 set(SYSTEM_ID ${CMAKE_SYSTEM_NAME})
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   set(SYSTEM_TYPE Linux)
