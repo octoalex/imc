@@ -108,3 +108,5 @@ http-client.private.env.json
 ## Ignore virtual environment
 .venv
 __pycache__/
+
+docs/html/

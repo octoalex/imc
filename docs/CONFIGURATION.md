@@ -26,10 +26,10 @@ Please note: when setting one of these, they must be prefixed by `-D`
 
 Please note: when setting one of these, they must be prefixed by `-D`
 
-| Variable           | Description                                | Default |
-| ------------------ | ------------------------------------------ | ------- |
-| `BUILD_TESTING`    | Enable building tests                      | `ON`    |
-| `DISABLE_BUILD_ID` | Disable giving the build a unique build id | `OFF`   |
+| Variable           | Description                                | Default                    |
+| ------------------ | ------------------------------------------ | -------------------------- |
+| `BUILD_TESTING`    | Enable building tests                      | `ON`                       |
+| `DISABLE_BUILD_ID` | Disable giving the build a unique build id | [usually](#build-id) `OFF` |
 
 ## Notes
 
@@ -46,3 +46,10 @@ For a list of supported compilers, go
 [here](https://cmake.org/cmake/help/latest/manual/cmake-compile-features.7.html#supported-compilers)
 
 Generally, on Linux, it usually is `gcc` or `clang`
+
+### Build id
+
+Generation of a random build number at build time is not yet supported on all platforms and compilers, so currently it
+is forcefully disabled on some platforms, currently those that do not support the device file `/dev/urandom`
+
+Specifically, it is unsupported by the `Clang` compiler, and the `Windows` operating system
