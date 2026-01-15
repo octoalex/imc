@@ -47,6 +47,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   set(SYSTEM_TYPE Linux)
 endif ()
 
+# Enable tests
 if(${BUILD_TESTING})
   enable_testing()
 endif()

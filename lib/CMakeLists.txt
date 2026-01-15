@@ -14,15 +14,16 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # Set variables for json-c
-
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_STATIC_LIBS ON)
 set(DISABLE_STATIC_FPIC OFF)
 
+# Add the json-c library
 FetchContent_Declare(json-c
   GIT_REPOSITORY https://github.com/json-c/json-c.git
   GIT_REMOTE_NAME origin
   GIT_TAG origin/master
 )
 FetchContent_MakeAvailable(json-c)
+# Alias
 add_library(json-c::json-c ALIAS json-c)

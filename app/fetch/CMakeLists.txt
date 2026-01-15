@@ -13,6 +13,9 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+# Find Packages
+find_package(OpenSSL REQUIRED)
+
 add_library(fetch)
 
 target_compile_features(fetch PRIVATE c_std_23)
@@ -36,7 +39,6 @@ target_sources(fetch
       private
 )
 
-find_package(OpenSSL REQUIRED)
 target_link_libraries(fetch PRIVATE curl OpenSSL::Crypto PUBLIC imc::common json-c::json-c)
 
 add_library(imc::fetch ALIAS fetch)
