@@ -39,7 +39,7 @@ int main(const int argc, const char *argv[]) {
         const int random = rand() % (RANDOM_MAX_VALUE - RANDOM_MIN_VALUE + 1) + RANDOM_MIN_VALUE;
 
         char random_string[3] = { };
-        sprintf(random_string, "%d", random);
+        sprintf(random_string, "%u", random);
 
         const char *command[] = {
             *argv,
