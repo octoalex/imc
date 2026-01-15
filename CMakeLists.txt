@@ -17,9 +17,13 @@ cmake_minimum_required(VERSION 3.23)
 
 project(imc VERSION 0.0.0)
 
+# Includes
 include(cmake/test_functions.cmake)
 include(cmake/target_functions.cmake)
 include(FetchContent)
+
+# Options and variables
+set(${CMAKE_PROJECT_NAME}_VERSION_NAME "Skeleton")
 
 option(BUILD_TESTING "Enable tests" ON)
 option(CMAKE_COMPILE_WARNING_AS_ERROR "Warnings get turned into errors" ON)
@@ -47,6 +51,7 @@ if(${BUILD_TESTING})
   enable_testing()
 endif()
 
+# Add targets
 add_subdirectory(app)
 add_subdirectory(lib)
 add_subdirectory(docs)
