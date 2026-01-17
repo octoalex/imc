@@ -44,3 +44,5 @@ echo -e "${blue}Clang Make Done${nc}"
 echo
 
 echo_results "test"
+
+exit_with_code

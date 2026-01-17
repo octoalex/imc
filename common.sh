@@ -31,28 +31,38 @@ export green="\033[0;32m"
 
 # Print Results
 function echo_results {
-  if [ $gcc_ninja_exit -eq 0 ]
+  if [[ $gcc_ninja_exit -eq 0 ]]
   then
     echo -e "${green}GCC Ninja $1 successful${nc}"
   else
     echo -e "${red}GCC Ninja $1 failed!${nc}"
   fi
-  if [ $gcc_make_exit -eq 0 ]
+  if [[ $gcc_make_exit -eq 0 ]]
   then
     echo -e "${green}GCC Make $1 successful${nc}"
   else
     echo -e "${red}GCC Make $1 failed!${nc}"
   fi
-  if [ $clang_ninja_exit -eq 0 ]
+  if [[ $clang_ninja_exit -eq 0 ]]
   then
     echo -e "${green}Clang Ninja $1 successful${nc}"
   else
     echo -e "${red}Clang Ninja $1 failed!${nc}"
   fi
-  if [ $clang_make_exit -eq 0 ]
+  if [[ $clang_make_exit -eq 0 ]]
   then
     echo -e "${green}Clang Make $1 successful${nc}"
   else
     echo -e "${red}Clang Make $1 failed!${nc}"
+  fi
+}
+
+# exit based on previous command results
+function exit_with_code {
+  if [[ $gcc_ninja_exit -ne 0 || $gcc_make_exit -ne 0 || $clang_ninja_exit -ne 0 || $clang_make_exit -ne 0 ]]
+  then
+    exit 255
+  else
+    exit 0
   fi
 }

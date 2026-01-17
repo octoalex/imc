@@ -21,7 +21,7 @@
 source common.sh
 
 # Set base values for the executables
-if [ -z "${jobs+x}" ]
+if [[ -z ${jobs+x} ]]
 then
   export jobs=8
 fi
@@ -49,3 +49,5 @@ echo -e "${blue}Clang Make Done${nc}"
 echo
 
 echo_results "build"
+
+exit_with_code

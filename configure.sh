@@ -21,11 +21,11 @@
 source common.sh
 
 # Set base values for the executables
-if [ -z "${GCC+x}" ]
+if [[ -z ${GCC+x} ]]
 then
   export GCC="gcc"
 fi
-if [ -z "${CLANG+x}" ]
+if [[ -z ${CLANG+x} ]]
 then
   export CLANG="clang"
 fi
