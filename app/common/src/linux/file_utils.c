@@ -41,7 +41,7 @@ void make_dirs(const char *path) {
         // get the position of the next directory separator
         ptr = strchr(clean + offset + 1, DIR_SEPARATOR);
         // get the position
-        const size_t end = ptr == nullptr ? size - 1 : ptr - clean;
+        const size_t end = ptr == nullptr ? size - 1 : (size_t)(ptr - clean);
         // copy only the new bytes
         memcpy(buffer + offset, clean + offset, end - offset + 1);
 

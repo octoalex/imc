@@ -74,7 +74,10 @@ Here's a brief explanation of each element for the uninitiated:
   assume many values, but usually it's recommended to be either `Release` or `Debug`. Set to `Debug` only if it is used
   to contribute to the launcher. Otherwise, it's recommended to use `Release`
 
-Feel free to change any of these values, as the launcher is designed to be (as) platform-independent (as possible)
+For more information about these options, please visit the [configuration page](CONFIGURATION.md)
+
+Feel free to change any of these values, as the launcher is (going to be) designed to be (as) platform-independent
+(as possible)
 
 ## Building
 

@@ -17,13 +17,14 @@
 
 add_library(imc)
 
-configure_file(public/imc/imc/config.in.h public/imc/imc/config.h)
+configure_file(public/imc/imc/config.h.in public/imc/imc/config.h @ONLY)
 
 target_compile_features(imc PRIVATE c_std_23)
 target_enable_warnings(imc)
 target_sources(imc
   PRIVATE
     src/linux/launch_process.c
+    src/linux/config.c
 
   PUBLIC
     FILE_SET imc_public_headers
@@ -38,7 +39,9 @@ target_sources(imc
     BASE_DIRS
       private
 )
-
+if (${DISABLE_BUILD_ID})
+  target_compile_definitions(imc PUBLIC DISABLE_BUILD_ID)
+endif ()
 target_link_libraries(imc PRIVATE m imc::fetch imc::common)
 
 add_library(imc::imc ALIAS imc)

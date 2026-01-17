@@ -28,13 +28,17 @@ none yet :P
 
 not yet
 
-## Building
+## Usage and Building
 
-For a more complete guide, check out [the full guide](BUILDING.md)
+For a more complete guide, check out [the full guide](docs/INDEX.md)
 
 For a quick build, find the section for your operating system, and just run the commands
 
-### Debian/Ubuntu
+### Quick Build
+
+Quick guides to build on different platforms
+
+#### Debian/Ubuntu
 
 ```bash
 # Install stuff
@@ -52,15 +56,34 @@ cmake ..                                    \
       -D CMAKE_COMPILE_WARNING_AS_ERROR=OFF \
       -D CMAKE_BUILD_TYPE=Release
 # Build
-cmake --build .
+cmake --build . -j 8
 if [ $? -eq 0 ]; then
-  echo "The Launcher built successfully! You can find it at app/imc/imc";
+  echo "The Launcher was built successfully! You can find it at app/imc/imc";
 fi
 ```
 
 If the build was successful, the single executable should be found at `cmake-build-release/app/imc/imc` (it's a single
 file executable by the way)
 
+### Documentation
+
+To generate the documentation, you will have to download and use [Doxygen](https://www.doxygen.nl/download.html)
+
+- On Debian/Ubuntu:
+  ```bash
+  sudo apt install doxygen
+  ```
+
+Once you have it installed, run the following command after running the build step
+
+```bash
+cmake --build . --target=docs
+```
+
+Go to `doc/html/index.html`, open it in your browser, and you will be done!
+
 ## License
 
-All software components are distributed under the GNU GPLv3 License found [here (file `/LICENSE`)](LICENSE)
+All software components are distributed under the GNU GPLv3 License found [here (file `LICENSE`)](LICENSE)
+
+All 3rd party software licenses and legal notices are found [here (file `NOTICES`)](NOTICES)

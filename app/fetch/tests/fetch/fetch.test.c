@@ -147,7 +147,7 @@ static hash hash_from_file() {
 static size_t size_from_file() {
     FILE *file = fopen(SIZE_FILE_PATH, "r");
     size_t size;
-    fscanf(file, "%ld", &size);
+    fscanf(file, "%lu", &size);
     fclose(file);
     return size;
 }

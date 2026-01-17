@@ -28,7 +28,7 @@ const char *const PATH_SELF = ".";
 
 static char *get_part(const char *path, size_t *base) {
     const char *ptr = strchr(path + *base, DIR_SEPARATOR);
-    const size_t position = ptr != nullptr ? ptr - path : strlen(path);
+    const size_t position = ptr != nullptr ? (size_t)(ptr - path) : strlen(path);
     char *part = calloc(position - *base + 1, sizeof(char));
     memcpy(part, path + *base, position - *base);
     *base = position + 1;
@@ -53,7 +53,7 @@ static void trim(char **ptr) {
 
 char *clean_path(const char *path) {
     const size_t size = strlen(path);
-    char *cleaned = calloc(sizeof(char), size);
+    char *cleaned = calloc(size, sizeof(char));
     const bool absolute = path[0] == DIR_SEPARATOR;
     size_t insertion = absolute;
     if (absolute) {
@@ -122,7 +122,7 @@ char *get_parent_dir(const char *path) {
         free(part);
     } else {
         const bool absolute = parent[0] == DIR_SEPARATOR;
-        const bool up = parent[0] == '.' == !absolute && strlen(parent) == 1;
+        const bool up = (parent[0] == '.') != absolute && strlen(parent) == 1;
         const bool upper = strcmp(parent + absolute, PATH_UP) == 0;
         if (up) {
             strcpy(parent + absolute, PATH_UP);

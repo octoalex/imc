@@ -23,9 +23,9 @@
 #include <string.h>
 
 const char *const STRING = "Hello, I am a string, and I like goth men, women and non-binary people";
-const size_t STRING_SIZE = strlen(STRING);
 
 int main() {
+    const size_t string_size = strlen(STRING);
     FILE *read;
     FILE *write;
     if (!create_pipe(&read, &write)) {
@@ -33,11 +33,11 @@ int main() {
         return -1;
     }
 
-    fwrite(STRING, sizeof(char), STRING_SIZE, write);
+    fwrite(STRING, sizeof(char), string_size, write);
     fclose(write);
 
-    char buffer[STRING_SIZE + 1];
-    fread(buffer, sizeof(char), STRING_SIZE + 1, read);
+    char buffer[string_size + 1];
+    fread(buffer, sizeof(char), string_size + 1, read);
     fclose(read);
 
     const bool equal = strcmp(STRING, buffer) == 0;

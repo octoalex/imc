@@ -16,24 +16,13 @@
  */
 
 /*
- * Created by octoalex on 22/11/2025.
+ * Created by octoalex on 11/01/2026.
  */
 
-#ifndef IMC_CONFIG_IN_H
-#define IMC_CONFIG_IN_H
+#include <imc/imc/config.h>
 
-const char *const PROJECT_NAME = "@CMAKE_PROJECT_NAME@";
-
-constexpr int VERSION_MAJOR = @imc_VERSION_MAJOR@;
-constexpr int VERSION_MINOR = @imc_VERSION_MINOR@;
-constexpr int VERSION_PATCH = @imc_VERSION_PATCH@;
-
-const char *const COMPILER_ID = "@CMAKE_C_COMPILER_ID@";
-
-/// The specific toolchain against which the application is compiled for
-const char *const SYSTEM_ID = "@SYSTEM_ID@";
-
-/// The ultimate os on which the application is compiled for
-const char *const SYSTEM_TYPE = "@SYSTEM_TYPE@";
-
-#endif //IMC_CONFIG_IN_H
+#if !defined(DISABLE_BUILD_ID) && linux
+const uint8_t BUILD_ID[32] = {
+#   embed </dev/urandom> limit(32)
+};
+#endif

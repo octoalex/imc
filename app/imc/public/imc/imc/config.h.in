@@ -1,0 +1,56 @@
+/* 
+ * This file is part of octoalex's imc (https://github.com/octoalex/imc).
+ * Copyright (c) 2025 octoalex.
+ * 
+ * This program is free software: you can redistribute it and/or modify  
+ * it under the terms of the GNU General Public License as published by  
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * Created by octoalex on 22/11/2025.
+ */
+
+@imc_GENERATED_DISCLAIMER@
+
+#ifndef IMC_CONFIG_IN_H
+#define IMC_CONFIG_IN_H
+
+#include <stdint.h>
+
+/// The name of the project
+const char *const PROJECT_NAME = "@CMAKE_PROJECT_NAME@";
+/// The name of the current version
+const char *const VERSION_NAME = "@imc_VERSION_NAME@";
+/// The major version number
+constexpr int VERSION_MAJOR = @imc_VERSION_MAJOR@;
+/// The minor version number
+constexpr int VERSION_MINOR = @imc_VERSION_MINOR@;
+/// The patch version number
+constexpr int VERSION_PATCH = @imc_VERSION_PATCH@;
+
+/// The compiler used for this build
+const char *const COMPILER = "@CMAKE_C_COMPILER_ID@";
+/// Version of the compiled used for this build
+const char *const COMPILER_VERSION = "@CMAKE_C_COMPILER_VERSION@";
+/// The build system used for this build
+const char *const BUILD_SYSTEM = "@CMAKE_GENERATOR@";
+/// The specific toolchain against which the application is built for
+const char *const TOOLCHAIN = "@CMAKE_SYSTEM_NAME@";
+/// The ultimate os on which the application is built for
+const char *const SYSTEM = "@imc_SYSTEM@";
+
+#ifndef DISABLE_BUILD_ID
+/// Unique build id
+extern const uint8_t BUILD_ID[32];
+#endif
+
+#endif //IMC_CONFIG_IN_H

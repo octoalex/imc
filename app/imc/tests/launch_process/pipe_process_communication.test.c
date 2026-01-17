@@ -81,7 +81,7 @@ int main(const int argc, const char *argv[]) {
         const int random2 = rand() % (RANDOM_MAX_VALUE - RANDOM_MIN_VALUE + 1) + RANDOM_MIN_VALUE;
 
         char random1_string[4] = { };
-        sprintf(random1_string, "%d", random1);
+        sprintf(random1_string, "%u", random1);
 
         const char *command[] = {
             *argv,
