@@ -21,7 +21,7 @@ jobs:
         run: 
           curl https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.gz --output ~/gcc-15/gcc-15.2.0.tar.gz;
           tar -xzf ~/gcc-15/gcc-15.2.0.tar.gz;
-          ls;
+          ls -d $PWD/*;
           mv ~/gcc-15/gcc-15.2.0 ~/gcc-15/src;
           rm ~/gcc-15/gcc-15.2.0.tar.gz;
           echo requires_build=true >> $GITHUB_OUTPUT;
