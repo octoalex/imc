@@ -5,14 +5,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout proposed changes
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
+      - name: Load cached data
+        uses: actions/cache@v4
+        with:
+          path: ${github.workspace}/build-linux-x86_64-gcc
+          key: linux-x86_64-gcc-${{ hashFiles('**/CMakeLists.txt') }}
       - name: Configure Linux x86_64 gcc and Ninja
         run: cmake -B build-linux-x86_64-gcc -G Ninja -D CMAKE_C_COMPILER=gcc
   configure-linux-x86_64-clang:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout proposed changes
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
+      - name: Load cached data
+        uses: actions/cache@v4
+        with:
+          path: ${github.workspace}/build-linux-x86_64-clang
+          key: linux-x86_64-clang-${{ hashFiles('**/CMakeLists.txt') }}
       - name: Configure Linux x86_64 clang and Ninja
         run: cmake -B build-linux-x86_64-clang -G Ninja -D CMAKE_C_COMPILER=clang
   build-linux-x86_64-gcc:
@@ -20,7 +30,12 @@ jobs:
     needs: configure-linux-x86_64-gcc
     steps:
       - name: Checkout proposed changes
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
+      - name: Load cached data
+        uses: actions/cache@v4
+        with:
+          path: ${github.workspace}/build-linux-x86_64-gcc
+          key: linux-x86_64-gcc-${{ hashFiles('**/CMakeLists.txt') }}
       - name: Build Linux x86_64 gcc and Ninja
         run: cmake --build build-linux-x86_64-gcc
   build-linux-x86_64-clang:
@@ -28,7 +43,12 @@ jobs:
     needs: configure-linux-x86_64-clang
     steps:
       - name: Checkout proposed changes
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
+      - name: Load cached data
+        uses: actions/cache@v4
+        with:
+          path: ${github.workspace}/build-linux-x86_64-clang
+          key: linux-x86_64-clang-${{ hashFiles('**/CMakeLists.txt') }}
       - name: Build Linux x86_64 clang and Ninja
         run: cmake --build build-linux-x86_64-clang
   test-linux-x86_64-gcc:
@@ -36,7 +56,12 @@ jobs:
     needs: build-linux-x86_64-gcc
     steps:
       - name: Checkout proposed changes
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
+      - name: Load cached data
+        uses: actions/cache@v4
+        with:
+          path: ${github.workspace}/build-linux-x86_64-gcc
+          key: linux-x86_64-gcc-${{ hashFiles('**/CMakeLists.txt') }}
       - name: Test Linux x86_64 gcc and Ninja
         run: ctest --test-dir build-linux-x86_64-gcc --output-on-failure
   test-linux-x86_64-clang:
@@ -44,6 +69,11 @@ jobs:
     needs: build-linux-x86_64-clang
     steps:
       - name: Checkout proposed changes
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
+      - name: Load cached data
+        uses: actions/cache@v4
+        with:
+          path: ${github.workspace}/build-linux-x86_64-clang
+          key: linux-x86_64-clang-${{ hashFiles('**/CMakeLists.txt') }}
       - name: Test Linux x86_64 clang and Ninja
         run: ctest --test-dir build-linux-x86_64-clang --output-on-failure
