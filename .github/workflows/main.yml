@@ -4,13 +4,8 @@ jobs:
   install-dependencies:
     runs-on: ubuntu-latest
     steps:
-      - name: Load dependency cache
-        uses: actions/cache@v4
-        with:
-          path: /
-          key: root
       - name: Install curl
-        run: sudo apt-get install libcurl4-openssl-dev
+        run: sudo apt-get install -y libcurl4-openssl-dev
   configure-linux-x86_64-gcc:
     runs-on: ubuntu-latest
     needs: install-dependencies
@@ -22,11 +17,6 @@ jobs:
         with:
           path: ${{github.workspace}}/build-linux-x86_64-gcc
           key: linux-x86_64-gcc-${{ hashFiles('**/CMakeLists.txt') }}
-      - name: Load dependency cache
-        uses: actions/cache@v4
-        with:
-          path: /
-          key: root
       - name: Configure Linux x86_64 gcc and Ninja
         run: cmake -B ${{github.workspace}}/build-linux-x86_64-gcc -G Ninja -D CMAKE_C_COMPILER=gcc
   configure-linux-x86_64-clang:
@@ -40,11 +30,6 @@ jobs:
         with:
           path: ${{github.workspace}}/build-linux-x86_64-clang
           key: linux-x86_64-clang-${{ hashFiles('**/CMakeLists.txt') }}
-      - name: Load dependency cache
-        uses: actions/cache@v4
-        with:
-          path: /
-          key: root
       - name: Configure Linux x86_64 clang and Ninja
         run: cmake -B ${{github.workspace}}/build-linux-x86_64-clang -G Ninja -D CMAKE_C_COMPILER=clang
   build-linux-x86_64-gcc:
@@ -58,11 +43,6 @@ jobs:
         with:
           path: ${{github.workspace}}/build-linux-x86_64-gcc
           key: linux-x86_64-gcc-${{ hashFiles('**/CMakeLists.txt') }}
-      - name: Load dependency cache
-        uses: actions/cache@v4
-        with:
-          path: /
-          key: root
       - name: Build Linux x86_64 gcc and Ninja
         run: cmake --build ${{github.workspace}}/build-linux-x86_64-gcc
   build-linux-x86_64-clang:
@@ -76,11 +56,6 @@ jobs:
         with:
           path: ${{github.workspace}}/build-linux-x86_64-clang
           key: linux-x86_64-clang-${{ hashFiles('**/CMakeLists.txt') }}
-      - name: Load dependency cache
-        uses: actions/cache@v4
-        with:
-          path: /
-          key: root
       - name: Build Linux x86_64 clang and Ninja
         run: cmake --build ${{github.workspace}}/build-linux-x86_64-clang
   test-linux-x86_64-gcc:
@@ -94,11 +69,6 @@ jobs:
         with:
           path: ${{github.workspace}}/build-linux-x86_64-gcc
           key: linux-x86_64-gcc-${{ hashFiles('**/CMakeLists.txt') }}
-      - name: Load dependency cache
-        uses: actions/cache@v4
-        with:
-          path: /
-          key: root
       - name: Test Linux x86_64 gcc and Ninja
         run: ctest --test-dir ${{github.workspace}}/build-linux-x86_64-gcc --output-on-failure
   test-linux-x86_64-clang:
@@ -112,10 +82,5 @@ jobs:
         with:
           path: ${{github.workspace}}/build-linux-x86_64-clang
           key: linux-x86_64-clang-${{ hashFiles('**/CMakeLists.txt') }}
-      - name: Load dependency cache
-        uses: actions/cache@v4
-        with:
-          path: /
-          key: root
       - name: Test Linux x86_64 clang and Ninja
         run: ctest --test-dir ${{github.workspace}}/build-linux-x86_64-clang --output-on-failure
