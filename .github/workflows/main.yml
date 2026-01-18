@@ -12,11 +12,11 @@ jobs:
           path: ~/gcc-15
           key: gcc-15-x86_64-pc-linux-gnu
       - name: Create root directory
-        if: ${{ hashFiles('/home/runner/gcc-15') == '' }}
+        if: ${{ hashFiles('~/gcc-15') == '' }}
         run: mkdir $HOME/gcc-15
       - name: Download sources
         id: source
-        if: ${{ hashFiles('/home/runner/gcc-15/bin/gcc') == '' }}
+        if: ${{ hashFiles('~/gcc-15/bin/gcc') == '' }}
         timeout-minutes: 15
         run: 
           curl https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.gz --output $HOME/gcc-15/gcc-15.2.0.tar.gz;
@@ -26,23 +26,23 @@ jobs:
           echo requires_build=true >> $GITHUB_OUTPUT;
       - name: Download Prerequisites
         timeout-minutes: 15
-        working-directory: /home/runner/gcc-15/src
+        working-directory: ~/gcc-15/src
         run: contrib/download_prerequisites
       - name: Create object directory
-        if: ${{ hashFiles('/home/runner/gcc-15/obj') == '' && steps.source.outputs.requires_build }}
+        if: ${{ hashFiles('~/gcc-15/obj') == '' && steps.source.outputs.requires_build }}
         run: mkdir $HOME/gcc-15/obj
       - name: Configure
         if: ${{ steps.source.outputs.requires_build }}
-        working-directory: /home/runner/gcc-15/obj
+        working-directory: ~/gcc-15/obj
         run: $HOME/gcc-15/src/configure --host=x86_64-pc-linux-gnu --enable-languages=c --prefix=$HOME/gcc-15 --disable-multilib
       - name: Build
         if: ${{ steps.source.outputs.requires_build }}
-        working-directory: /home/runner/gcc-15/obj
+        working-directory: ~/gcc-15/obj
         timeout-minutes: 120
         run: make -j 8
       - name: Install
         if: ${{ steps.source.outputs.requires_build }}
-        working-directory: /home/runner/gcc-15/obj
+        working-directory: ~/gcc-15/obj
         run: make install
   build-linux-x86_64-gcc:
     runs-on: ubuntu-latest
