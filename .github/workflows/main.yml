@@ -85,7 +85,7 @@ jobs:
           packages: libcurl4-openssl-dev clang-19
           version: 0.0.0
       - name: Configure CMake
-        run: cmake -B $HOME/linux-x86_64-clang -G Ninja -D CMAKE_C_COMPILER=clang
+        run: cmake -B $HOME/linux-x86_64-clang -G Ninja -D CMAKE_C_COMPILER=clang-19
       - name: Build
         run: cmake --build $HOME/linux-x86_64-clang -j 8
   test-linux-x86_64-gcc:
