@@ -11,18 +11,22 @@ jobs:
           key: gcc-15.2.0-x86_64-pc-linux-gnu-c
       - name: Check if GCC 15 is present
         id: check
-        run: if [[ -f gcc-15.2.0-x86_64-pc-linux-gnu-c/bin/gcc ]]; then echo not_present=true >> $GITHUB_OUTPUT; fi
+        run: |
+          if [[ ! -f $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c/bin/gcc ]]
+          them
+            echo requires_download=true >> $GITHUB_OUTPUT
+          fi
         shell: bash
       - name: Download GCC 15
-        if: ${{ steps.check.outputs.not_present }}
+        if: ${{ steps.check.outputs.requires_download }}
         run:
           curl https://files.octoalex.me/gcc/15.2.0/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
           --output $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
       - name: Install GCC 15
-        if: ${{ steps.check.outputs.not_present }}
+        if: ${{ steps.check.outputs.requires_download }}
         run: tar -xJf $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
       - name: Cleanup
-        if: ${{ steps.check.outputs.not_present }}
+        if: ${{ steps.check.outputs.requires_download }}
         run: rm $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
         shell: bash
   build-linux-x86_64-gcc:
@@ -47,7 +51,7 @@ jobs:
           path: /home/runner/gcc-15
           key: gcc-15-x86_64-pc-linux-gnu
       - name: Configure CMake
-        run: cmake -B $HOME/linux-x86_64-gcc -G Ninja -D CMAKE_C_COMPILER=$HOME/gcc-15/bin/gcc
+        run: cmake -B $HOME/linux-x86_64-gcc -G Ninja -D CMAKE_C_COMPILER=$HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c/bin/gcc
       - name: Build
         run: cmake --build $HOME/linux-x86_64-gcc -j 8
   build-linux-x86_64-clang:
