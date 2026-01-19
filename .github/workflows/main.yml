@@ -13,7 +13,7 @@ jobs:
         id: check
         run: |
           if [[ ! -f $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c/bin/gcc ]]
-          them
+          then
             echo requires_download=true >> $GITHUB_OUTPUT
           fi
         shell: bash
