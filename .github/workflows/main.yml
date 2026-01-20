@@ -25,6 +25,9 @@ jobs:
       - name: Install GCC 15
         if: ${{ steps.check.outputs.requires_download }}
         run: tar -xJf $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz -C $HOME
+      - name: Debug
+        run: ls -R
+        shell: bash
       - name: Cleanup
         if: ${{ steps.check.outputs.requires_download }}
         run: rm $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
