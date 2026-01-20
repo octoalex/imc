@@ -19,12 +19,12 @@ jobs:
         shell: bash
       - name: Download GCC 15
         if: ${{ steps.check.outputs.requires_download }}
-        run: curl https://files.octoalex.me/gcc/15.2.0/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz --output $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
-      - name: LS for Debugging
-        run: ls $HOME
+        run:
+          curl https://files.octoalex.me/gcc/15.2.0/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
+          --output $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
       - name: Install GCC 15
         if: ${{ steps.check.outputs.requires_download }}
-        run: tar -xJf $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz -C $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c
+        run: tar -xJf $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
       - name: Cleanup
         if: ${{ steps.check.outputs.requires_download }}
         run: rm $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
