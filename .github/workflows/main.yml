@@ -48,7 +48,7 @@ jobs:
       - name: Load gcc 15 Cache
         uses: actions/cache@v5
         with:
-          path: /home/runner/gcc-15
+          path: /home/runner/gcc-15.2.0-x86_64-pc-linux-gnu-c
           key: gcc-15-x86_64-pc-linux-gnu
       - name: Configure CMake
         run: cmake -B $HOME/linux-x86_64-gcc -G Ninja -D CMAKE_C_COMPILER=$HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c/bin/gcc
