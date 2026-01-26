@@ -1,69 +1,37 @@
 name: main
 on: pull_request
 jobs:
-  build-gcc-15:
-    env:
-      requires_build:
+  get-gcc-15:
     runs-on: ubuntu-latest
     steps:
       - name: Load gcc 15 Cache
         uses: actions/cache@v5
         with:
-          path: /home/runner/gcc-15
-          key: gcc-15-x86_64-pc-linux-gnu
-      - name: Create root directory
+          path: /home/runner/gcc-15.2.0-x86_64-pc-linux-gnu-c
+          key: gcc-15.2.0-x86_64-pc-linux-gnu-c
+      - name: Check if GCC 15 is present
+        id: check
         run: |
-          if [[ ! -d $HOME/gcc-15 ]]
+          if [[ ! -f $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c/bin/gcc ]]
           then
-            mkdir $HOME/gcc-15
+            echo requires_download=true >> $GITHUB_OUTPUT
           fi
         shell: bash
-      - name: Download sources
-        id: source
-        timeout-minutes: 15
-        run: |
-          if [[ ! -f $HOME/gcc-15/bin/gcc ]]
-          then
-            curl https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.gz --output $HOME/gcc-15/gcc-15.2.0.tar.gz
-            tar -xzf $HOME/gcc-15/gcc-15.2.0.tar.gz -C $HOME/gcc-15
-            mv $HOME/gcc-15/gcc-15.2.0 $HOME/gcc-15/src
-            rm $HOME/gcc-15/gcc-15.2.0.tar.gz
-            echo requires_build=true >> $GITHUB_OUTPUT
-          fi
+      - name: Download GCC 15
+        if: ${{ steps.check.outputs.requires_download }}
+        run:
+          curl https://files.octoalex.me/gcc/15.2.0/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
+          --output $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
+      - name: Install GCC 15
+        if: ${{ steps.check.outputs.requires_download }}
+        run: tar -xJf $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz -C $HOME
+      - name: Cleanup
+        if: ${{ steps.check.outputs.requires_download }}
+        run: rm $HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c.tar.xz
         shell: bash
-      - name: Download Prerequisites
-        if: ${{ steps.source.outputs.requires_build }}
-        timeout-minutes: 15
-        working-directory: /home/runner/gcc-15/src
-        run: contrib/download_prerequisites
-      - name: Create object directory
-        if: ${{ steps.source.outputs.requires_build }}
-        run: |
-          if [[ ! -d $HOME/gcc-15/obj ]]
-          then
-            mkdir $HOME/gcc-15/obj
-          fi
-        shell: bash
-      - name: Configure
-        if: ${{ steps.source.outputs.requires_build }}
-        working-directory: /home/runner/gcc-15/obj
-        run: $HOME/gcc-15/src/configure --host=x86_64-pc-linux-gnu --enable-languages=c --prefix=$HOME/gcc-15 --disable-multilib
-      - name: Build
-        if: ${{ steps.source.outputs.requires_build }}
-        working-directory: /home/runner/gcc-15/obj
-        timeout-minutes: 120
-        run: make -j 8
-      - name: Install
-        if: ${{ steps.source.outputs.requires_build }}
-        working-directory: /home/runner/gcc-15/obj
-        run: make install
-      - name: Clean
-        if: ${{ steps.source.outputs.requires_build }}
-        working-directory: /home/runner/gcc-15/
-        run: rm -rf $HOME/gcc-15/obj
   build-linux-x86_64-gcc:
     runs-on: ubuntu-latest
-    needs: build-gcc-15
+    needs: get-gcc-15
     steps:
       - name: Checkout changes
         uses: actions/checkout@v5
@@ -80,10 +48,10 @@ jobs:
       - name: Load gcc 15 Cache
         uses: actions/cache@v5
         with:
-          path: /home/runner/gcc-15
-          key: gcc-15-x86_64-pc-linux-gnu
+          path: /home/runner/gcc-15.2.0-x86_64-pc-linux-gnu-c
+          key: gcc-15.2.0-x86_64-pc-linux-gnu-c
       - name: Configure CMake
-        run: cmake -B $HOME/linux-x86_64-gcc -G Ninja -D CMAKE_C_COMPILER=$HOME/gcc-15/bin/gcc
+        run: cmake -B $HOME/linux-x86_64-gcc -G Ninja -D CMAKE_C_COMPILER=$HOME/gcc-15.2.0-x86_64-pc-linux-gnu-c/bin/gcc
       - name: Build
         run: cmake --build $HOME/linux-x86_64-gcc -j 8
   build-linux-x86_64-clang:
