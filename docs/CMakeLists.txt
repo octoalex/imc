@@ -13,4 +13,4 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-add_custom_target(docs COMMAND doxygen ${CMAKE_SOURCE_DIR}/docs/Doxyfile)
+add_custom_target(docs COMMAND doxygen ${CMAKE_SOURCE_DIR}/docs/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
