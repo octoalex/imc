@@ -47,37 +47,45 @@ constexpr byte_array EMPTY_BYTE_ARRAY = { .data = nullptr, .size = 0 };
 /// @param size The size of the array
 /// @return The array
 /// @note Setting `size` to `0` will return an empty array
-/// @details Functionally, it's just a `calloc` call, however it ensures that size is identical to the actual size of
-///          the array, and simplifies creation (1 line instead of 4)
+/// @details Functionally, it's just a
+///          <a href="https://manpages.debian.org/trixie/manpages-dev/calloc.3"> `calloc` </a> call, however it
+///          ensures that size is identical to the actual size of the array, and simplifies creation (1 line instead of
+///          4)
 byte_array alloc_byte_array(size_t size);
 
 /// Deallocates a byte array
 /// @param array The array
-/// @details This function does 2 things: it calls `free` to deallocate `data`, and then replaces `data` and `size` with
-///          `nullptr` and `0` respectively, to clearly mark the array as deallocated, to allow recycling it, and so if
-///          it's accidentally passed to some function, it will not cause any illegal memory accesses
+/// @details This function does 2 things: it calls
+///          <a href="https://manpages.debian.org/trixie/manpages-dev/free.3"> `free` </a> to deallocate
+///          `data`, and then replaces `data` and `size` with `nullptr` and `0` respectively, to clearly mark the array
+///          as deallocated, to allow recycling it, and so if it's accidentally passed to some function, it will not
+///          cause any illegal memory accesses
 void free_byte_array(byte_array *array);
 
 /// Deallocates a byte array, without setting the passed array to a safe empty value
 /// @param array The array to free
 /// @note Does not set the array to an empty value
-/// @detail Works exactly like @link free_byte_array @endlink, but unlike it, it leaves the array in a potentially
-///         unsafe state. Function created to free const byte_arrays
+/// @details Works exactly like @link free_byte_array @endlink, but unlike it, it leaves the array in a potentially
+///          unsafe state. Function created to free const byte_arrays
 void free_byte_array_unsafe(byte_array array);
 
 /// Resize a byte array
 /// @param array The array to resize
 /// @param new_size The size to resize the array to
 /// @note New bytes are zeroed
-/// @details This function does 2 things: it calls `realloc` to deallocate the data, and then replaces size with the new
-///          size, to ensure `size` is always the same as the real size, and simplifying resizing it
+/// @details This function does 2 things: it calls
+///          <a href="https://manpages.debian.org/trixie/manpages-dev/realloc.3"> `realloc` </a> to deallocate
+///          the data, and then replaces size with the new size, to ensure `size` is always the same as the real size,
+///          and simplifying resizing it
 void resize_byte_array(byte_array *array, size_t new_size);
 
 /// Copy a byte array
 /// @param base The array to copy
 /// @return A copied array
-/// @details This function calls `malloc` to allocate a new array of `base.size` bytes, then calls `memcpy` to copy the
-///          bytes over.
+/// @details This function calls
+///          <a href="https://manpages.debian.org/trixie/manpages-dev/malloc.3"> `malloc` </a> to allocate a new
+///          array of `base.size` bytes, then calls
+///          <a href="https://manpages.debian.org/trixie/manpages-dev/memcpy.3"> `memcpy` </a> to copy the bytes over.
 byte_array copy_byte_array(const byte_array *base);
 
 /// Creates a byte array from a C (null terminated) string

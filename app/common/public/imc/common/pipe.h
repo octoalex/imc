@@ -31,7 +31,7 @@
 ///       code <b>before</b> doing any read or write operations on either <br/>
 ///       @code setlinebuf(write /* or read */);@endcode <br/>
 ///       For more information, look at
-///       <a href="https://manpages.debian.org/trixie/manpages-dev/setvbuf.3.en.html"> `setvbuf`'s manpage </a>
+///       <a href="https://manpages.debian.org/trixie/manpages-dev/setvbuf.3.en.html"> `setvbuf` </a>
 /// @return Whether the pipe creation was successful
 bool create_pipe(FILE **read, FILE **write);
 
