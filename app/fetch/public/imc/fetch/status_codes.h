@@ -36,7 +36,7 @@ typedef enum fetch_status_code {
     FETCH_STATUS_BAD_ARGUMENTS = 0x0000'0003,
     /// The downloaded file does not match the resource
     /// @note This is not triggered by an outdated cache, but if both the cache and the downloaded resource don't
-    ///       match
+    ///       match the hash and the size
     FETCH_STATUS_BAD_RESOURCE = 0x0000'0004
 } fetch_status_code;
 

@@ -34,7 +34,7 @@
 /// @param bytes Nullable pointer to a byte array, where the downloaded data will also be put <br/>
 ///              May only be null if the resource's path is not null
 /// @return The status of the operation
-/// @note Currently, the only supported protocols are http and https
+/// @note Currently, the only supported protocols are HTTP and HTTPS
 fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes);
 
 /// Downloads a file off of the internet and caches it, or gets it from the cache, and returns it as a JSON object
@@ -44,7 +44,7 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes);
 ///             If the parsing operation fails, the pointer will be left to null <br/>
 ///             May only be null if the resource's path is not null
 /// @return The status of the operation
-/// @note Currently, the only supported protocols are http and https
+/// @note Currently, the only supported protocols are HTTP and HTTPS
 fetch_status fetch_json(const resource *resource, json_object *NULLABLE *json);
 
 /// Downloads a file off of the internet and caches it, or gets it from the cache, and returns it as a file
@@ -52,7 +52,7 @@ fetch_status fetch_json(const resource *resource, json_object *NULLABLE *json);
 /// @param file Nullable pointer to a file, where the downloaded data will also be put, as a readable file pointer <br/>
 ///             May only be null if the resource's path is not null
 /// @return The status of the operation
-/// @note Currently, the only supported protocols are http and https
+/// @note Currently, the only supported protocols are HTTP and HTTPS
 fetch_status fetch_file(const resource *resource, FILE *NULLABLE *file);
 
 #endif //IMC_FETCH_H

@@ -15,7 +15,7 @@
 
 cmake_minimum_required(VERSION 3.23)
 
-project(imc VERSION 0.0.0)
+project(imc VERSION 0.1.0)
 
 # Includes
 include(cmake/test_functions.cmake)
@@ -23,7 +23,7 @@ include(cmake/target_functions.cmake)
 include(FetchContent)
 
 # Options and variables
-set(${CMAKE_PROJECT_NAME}_VERSION_NAME "Skeleton")
+set(${CMAKE_PROJECT_NAME}_VERSION_NAME "Ruin Lizard")
 
 option(BUILD_TESTING "Enable tests" ON)
 option(CMAKE_COMPILE_WARNING_AS_ERROR "Warnings get turned into errors" ON)
@@ -42,9 +42,8 @@ set(${CMAKE_PROJECT_NAME}_GENERATED_DISCLAIMER "/*
  */"
 )
 
-set(SYSTEM_ID ${CMAKE_SYSTEM_NAME})
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-  set(SYSTEM_TYPE Linux)
+  set(${PROJECT_NAME}_SYSTEM Linux)
 endif ()
 
 # Enable tests

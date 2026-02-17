@@ -29,14 +29,9 @@
 /// @param write The write end of the pipe, like a file opened with @code fopen(path, "w")@endcode
 /// @note The default buffering mode is not specified. If you want to be sure to have line buffering, run the following
 ///       code <b>before</b> doing any read or write operations on either <br/>
-///       @code setvbuf(write, buffer, _IOLBF, buffer_size);@endcode <br/>
-///       Where:
-///         - @code buffer@endcode is any character array. If necessary, the user must free this array, however it must
-///           not be freed before the file is closed, and it should be a local array only if the file is closed within
-///           the same scope
-///         - @code buffer_size@endcode is the size of the aforementioned buffer
-///
-///       For more information, look for @code setvbuf@endcode 's manpage
+///       @code setlinebuf(write /* or read */);@endcode <br/>
+///       For more information, look at
+///       <a href="https://manpages.debian.org/trixie/manpages-dev/setvbuf.3.en.html"> `setvbuf` </a>
 /// @return Whether the pipe creation was successful
 bool create_pipe(FILE **read, FILE **write);
 

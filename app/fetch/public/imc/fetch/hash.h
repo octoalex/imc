@@ -79,7 +79,7 @@ void free_hash(hash *hash);
 
 /// Frees a hash, without setting it to a safe empty value
 /// @param hash The hash to free
-/// @detail Works exactly like @link free_hash@endlink, but unlike it, it leaves the hash in a potentially unsafe state
+/// @detail Works exactly like @link free_hash @endlink, but unlike it, it leaves the hash in a potentially unsafe state
 void free_hash_unsafe(const hash *hash);
 
 #endif //IMC_HASH_H
