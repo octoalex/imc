@@ -38,6 +38,22 @@ constexpr int STATUS_SUCCESSFUL_CODE = 0;
 /// Reserved status code to indicate an invalid status
 constexpr int STATUS_NULL_CODE = -1;
 
+/// Simple status to be used when the program runs out of memory
+extern const status STATUS_ERROR_OUT_OF_MEMORY;
+/// Status template to be used when a file is not found
+/// @note Format with
+///       @code
+///       // - 2 (for %s) + 1 (for the null terminator) = - 1
+///       char *message = malloc(strlen(STATUS_ERROR_FILE_NOT_FOUND.message) + strlen(filename) - 1);
+///       sprintf(message, STATUS_ERROR_FILE_NOT_FOUND.message, filename);
+///       status s = {
+///           .code = STATUS_ERROR_FILE_NOT_FOUND.code,
+///           .message = message
+///       };
+///       @endcode
+///       where `filename` is the name of the file, and `s` is the status
+extern const status STATUS_ERROR_FILE_NOT_FOUND;
+
 /// Checks whether the given status is successful
 /// @param status The status
 /// @return Whether the status is successful
@@ -50,5 +66,13 @@ void free_status(status *status);
 /// Frees a status without setting it to a safe value
 /// @param status The status to free
 void free_status_unsafe(status status);
+
+/// Exits the program with the given status code and error message if the status code is non-zero
+/// @param status The status code
+void error(const status *status);
+
+/// Prints a warning to the standard error, and continues to run the program if the status code is non-zero
+/// @param status The status code
+void warn(const status *status);
 
 #endif //IMC_STATUS_H

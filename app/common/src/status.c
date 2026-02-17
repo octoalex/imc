@@ -22,6 +22,17 @@
 #include <imc/common/status.h>
 
 #include <stdlib.h>
+#include <stdio.h>
+
+const status STATUS_ERROR_OUT_OF_MEMORY = {
+    .code = 0x0000'0010,
+    .message = "Program has run out of memory"
+};
+
+const status STATUS_ERROR_FILE_NOT_FOUND = {
+    .code = 0x0000'0011,
+    .message = "File \"%s\" could not found"
+};
 
 bool is_status_success(const status status) {
     return status.code == STATUS_SUCCESSFUL_CODE;
@@ -35,4 +46,21 @@ void free_status(status *status) {
 
 void free_status_unsafe(const status status) {
     free(status.message);
+}
+
+void error(const status *status) {
+    if (status->code == 0) return;
+    fprintf(stderr, "Error #%x", status->code);
+    if (status->message != nullptr) {
+        fprintf(stderr, ": \"%s\"", status->message);
+    }
+    exit(status->code);
+}
+
+void warn(const status *status) {
+    if (status->code == 0) return;
+    fprintf(stderr, "Warning #%x", status->code);
+    if (status->message != nullptr) {
+        fprintf(stderr, ": \"%s\"", status->message);
+    }
 }
