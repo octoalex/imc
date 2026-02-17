@@ -61,11 +61,11 @@ bool can_execute(const char *path);
 char *get_parent_dir(const char *path);
 
 /// Removes useless and/or redundant elements from a path.
-/// @details Simple @code .@endcode directories are removed (for example, @code a/./b@endcode becomes
-///          @code a/b@endcode), and "up" nodes such as @code ..@endcode eliminate the previous directory, unless there
-///          is nothing to be eliminated (for example, @code a/../b@endcode becomes @code b@endcode)
+/// @details Simple `.` directories are removed (for example, `a/./b` becomes `a/b`), and "up" nodes such as `..`
+///          eliminate the previous directory, unless there is nothing to be eliminated (for example, `a/../b` becomes
+///          `b`)
 /// @param path The path
-/// @return The cleaned up path, never with a trailing @code /@endcode
+/// @return The cleaned up path, never with a trailing `/`
 /// @note Returned path must be manually freed
 char *clean_path(const char *path);
 

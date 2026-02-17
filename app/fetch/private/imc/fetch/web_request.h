@@ -43,15 +43,15 @@ typedef enum web_request_status_code {
     WEB_REQUEST_STATUS_FAILED = FETCH_STATUS_DOWNLOAD_FAILED
 } web_request_status_code;
 
-/// Default timeout for @link web_request@endlink
+/// Default timeout for @link web_request @endlink
 constexpr unsigned long DEFAULT_TIMEOUT = 300'000;
 
 /// Gets a file from a url to memory
 /// @param url The url to download
 /// @param buffer Pointer to where the downloaded data will be put
 /// @param timeout Maximum number of milliseconds the web request can take <br/>
-///                If set to 0, the default value will be used
-///                If set to < 0, no timeout will be set
+///                If set to `0`, the default value will be used <br/>
+///                If set to `< 0`, no timeout will be set
 /// @note Supports only HTTP and HTTPS
 /// @return The web request's status code
 web_request_status web_request(const char *url, byte_array *buffer, unsigned long timeout);
