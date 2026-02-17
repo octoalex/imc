@@ -20,8 +20,10 @@
  */
 
 #include <imc/common/byte_array.h>
+
 #include <stdlib.h>
 #include <string.h>
+#include <imc/common/status.h>
 
 byte_array alloc_byte_array(const size_t size) {
     if (size == 0) {
@@ -32,6 +34,9 @@ byte_array alloc_byte_array(const size_t size) {
         .data = calloc(size, sizeof(uint8_t)),
         .size = size
     };
+    if (array.data == nullptr) {
+        error(&STATUS_ERROR_OUT_OF_MEMORY);
+    }
     return array;
 }
 
@@ -48,9 +53,8 @@ void free_byte_array_unsafe(const byte_array array) {
 void resize_byte_array(byte_array *array, const size_t new_size) {
     uint8_t *new_data = realloc(array->data, new_size);
     if (new_data == nullptr) {
-        // in this case, free
-        free_byte_array(array);
-        return;
+        // freeing is a bad idea, kill the program in this case
+        error(&STATUS_ERROR_OUT_OF_MEMORY);
     }
     for (size_t i = array->size; i < new_size; ++i) {
         new_data[i] = 0;
