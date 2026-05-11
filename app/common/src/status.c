@@ -21,11 +21,9 @@
 
 #include <imc/common/status.h>
 
-#include <stdlib.h>
+#include <stdarg.h>
 #include <stdio.h>
-#include <string.h>
-
-#include "../../../../../../../../usr/lib/gcc/x86_64-linux-gnu/14/include/stdarg.h"
+#include <stdlib.h>
 
 const status STATUS_ERROR_OUT_OF_MEMORY = {
     .code = 0x0000'0010,
