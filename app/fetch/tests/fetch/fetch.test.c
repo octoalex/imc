@@ -56,12 +56,12 @@ int main(const int argc, const char *argv[]) {
         .size = size_from_file()
     };
 
-    const fetch_status status = fetch(&resource, nullptr);
+    fetch_status *status = fetch(&resource, nullptr);
 
     const bool post_exists = is_file(CACHE_FILE_PATH);
     const struct timespec post_modified = get_modified_timestamp(CACHE_FILE_PATH);
 
-    switch (status.code) {
+    switch (status->code) {
     case FETCH_STATUS_DOWNLOAD_FAILED:
         fprintf(stderr, "FETCH_STATUS_DOWNLOAD_FAILED\n");
         break;
@@ -76,12 +76,11 @@ int main(const int argc, const char *argv[]) {
         break;
     default:
     }
-    if (status.message != nullptr) {
-        fprintf(stderr, "%s\n", status.message);
+    if (status->message != nullptr) {
+        fprintf(stderr, "%s\n", status->message);
     }
-    free(status.message);
-
-    const bool was_successful = status.code == FETCH_STATUS_SUCCESS;
+    const bool was_successful = status->code == FETCH_STATUS_SUCCESS;
+    free_status(status);
 
     bool any = false;
 

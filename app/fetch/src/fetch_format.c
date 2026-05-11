@@ -27,19 +27,16 @@
 const char *const ERROR_MESSAGE_BAD_JSON = "Both the path and the json pointer were null!";
 const char *const ERROR_MESSAGE_BAD_FILE = "Both the path and the file pointer were null!";
 
-fetch_status fetch_json(const resource *resource, json_object *NULLABLE *json) {
+fetch_status *fetch_json(const resource *resource, json_object *NULLABLE *json) {
     if (resource->path == nullptr && json == nullptr) {
-        const fetch_status status = {
-            .code = FETCH_STATUS_BAD_ARGUMENTS,
-            .message = strdup(ERROR_MESSAGE_BAD_FILE)
-        };
+        fetch_status *status = create_status(FETCH_STATUS_BAD_ARGUMENTS, ERROR_MESSAGE_BAD_FILE);
         return status;
     }
 
     byte_array bytes = EMPTY_BYTE_ARRAY;
-    const fetch_status status = fetch(resource, &bytes);
+    fetch_status *status = fetch(resource, &bytes);
 
-    if (status.code != FETCH_STATUS_SUCCESS || json == nullptr) {
+    if (status->code != FETCH_STATUS_SUCCESS || json == nullptr) {
         if (json != nullptr) {
             *json = nullptr;
         }
@@ -52,19 +49,16 @@ fetch_status fetch_json(const resource *resource, json_object *NULLABLE *json) {
     return status;
 }
 
-fetch_status fetch_file(const resource *resource, FILE *NULLABLE *file) {
+fetch_status *fetch_file(const resource *resource, FILE *NULLABLE *file) {
     if (resource->path == nullptr && file == nullptr) {
-        const fetch_status status = {
-            .code = FETCH_STATUS_BAD_ARGUMENTS,
-            .message = strdup(ERROR_MESSAGE_BAD_FILE)
-        };
+        fetch_status *status = create_status(FETCH_STATUS_BAD_ARGUMENTS, ERROR_MESSAGE_BAD_FILE);
         return status;
     }
 
     byte_array bytes = EMPTY_BYTE_ARRAY;
-    const fetch_status status = fetch(resource, &bytes);
+    fetch_status *status = fetch(resource, &bytes);
 
-    if (status.code != FETCH_STATUS_SUCCESS || file == nullptr) {
+    if (status->code != FETCH_STATUS_SUCCESS || file == nullptr) {
         if (file != nullptr) {
             *file = nullptr;
         }

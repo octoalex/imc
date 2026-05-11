@@ -26,6 +26,9 @@
 
 /// Unified status code structure
 typedef struct status {
+    /// Whether it was created by @link create_status @endlink
+    /// @note If manually initializing, please set to false
+    bool allocated_at_runtime;
     /// The error code itself
     int code;
     /// Optional error message
@@ -57,7 +60,14 @@ extern const status STATUS_ERROR_FILE_NOT_FOUND;
 /// Checks whether the given status is successful
 /// @param status The status
 /// @return Whether the status is successful
-bool is_status_success(status status);
+bool is_status_success(const status *status);
+
+/// Creates a status object
+/// @param code The code of the status
+/// @param format The message of the status (formatted as a printf format string)
+/// @param ... The format arguments
+/// @return The pointer to the created status object
+status *create_status(int code, const char *NULLABLE format, ...);
 
 /// Frees a status and sets it to a safe value
 /// @param status A pointer to the status to free

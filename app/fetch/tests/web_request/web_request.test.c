@@ -131,14 +131,16 @@ static int check_downloaded_data(const uint8_t *data, const size_t size) {
 int main() {
     byte_array buffer = EMPTY_BYTE_ARRAY;
 
-    const web_request_status status = web_request(TEST_URL, &buffer, DEFAULT_TIMEOUT);
+    web_request_status *status = web_request(TEST_URL, &buffer, DEFAULT_TIMEOUT);
     cleanup_web_request();
 
-    if (status.code != WEB_REQUEST_STATUS_SUCCESS) {
+    if (status->code != WEB_REQUEST_STATUS_SUCCESS) {
         // web_request has failed, abort
         fprintf(stderr, "Web Request has failed!\n");
         return -1;
     }
+
+    free_status(status);
 
     const int result = check_downloaded_data(buffer.data, buffer.size);
     free_byte_array(&buffer);

@@ -23,6 +23,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
+#include "../../../../../../../../usr/lib/gcc/x86_64-linux-gnu/14/include/stdarg.h"
 
 const status STATUS_ERROR_OUT_OF_MEMORY = {
     .code = 0x0000'0010,
@@ -34,18 +37,50 @@ const status STATUS_ERROR_FILE_NOT_FOUND = {
     .message = "File \"%s\" could not found"
 };
 
-bool is_status_success(const status status) {
-    return status.code == STATUS_SUCCESSFUL_CODE;
+static const status STATUS_ERROR_CANNOT_FREE_NON_RUNTIME_STATUS = {
+    .code = 0x1111'1110,
+    .message = "Status %p cannot be freed, since it was not created by create_status"
+};
+
+bool is_status_success(const status *status) {
+    return status->code == STATUS_SUCCESSFUL_CODE;
+}
+
+status *create_status(const int code, const char *NULLABLE format, ...) {
+    status *s = calloc(1, sizeof(status));
+    s->code = code;
+    s->allocated_at_runtime = true;
+
+    if (format != nullptr) {
+        va_list list;
+        va_list discover;
+        va_start(list, format);
+        va_copy(discover, list);
+
+        const size_t size = vsnprintf(nullptr, 0, format, discover);
+        s->message = calloc(size + 1, sizeof(char));
+        vsprintf(s->message, format, list);
+    }
+
+    return s;
 }
 
 void free_status(status *status) {
+    if (!status->allocated_at_runtime) {
+        struct status *err = create_status(
+            STATUS_ERROR_CANNOT_FREE_NON_RUNTIME_STATUS.code,
+            STATUS_ERROR_CANNOT_FREE_NON_RUNTIME_STATUS.message, status);
+        error(err);
+        free_status(err);
+    }
     free(status->message);
     status->message = nullptr;
     status->code = STATUS_NULL_CODE;
+    free(status);
 }
 
-void free_status_unsafe(const status status) {
-    free(status.message);
+void free_status_unsafe(status status) {
+    free_status(&status);
 }
 
 void error(const status *status) {
@@ -54,6 +89,7 @@ void error(const status *status) {
     if (status->message != nullptr) {
         fprintf(stderr, ": \"%s\"", status->message);
     }
+    fprintf(stderr, "\n");
     exit(status->code);
 }
 
@@ -63,4 +99,5 @@ void warn(const status *status) {
     if (status->message != nullptr) {
         fprintf(stderr, ": \"%s\"", status->message);
     }
+    fprintf(stderr, "\n");
 }
