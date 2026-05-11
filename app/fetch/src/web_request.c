@@ -54,13 +54,10 @@ static size_t write_to_memory(const void *contents, const size_t element, const 
     return size;
 }
 
-web_request_status web_request(const char *url, byte_array *buffer, const unsigned long timeout) {
+web_request_status *web_request(const char *url, byte_array *buffer, const unsigned long timeout) {
     if (strncasecmp(url, HTTP_URL_START, strlen(HTTP_URL_START)) != 0
         && strncasecmp(url, HTTPS_URL_START, strlen(HTTPS_URL_START)) != 0) {
-        const web_request_status status = {
-            .code = WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL,
-            .message = nullptr
-        };
+        web_request_status *status = create_status(WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL, nullptr);
         return status;
     }
 
@@ -69,20 +66,14 @@ web_request_status web_request(const char *url, byte_array *buffer, const unsign
         initialized = true;
         const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
         if (result != CURLE_OK) {
-            const web_request_status status = {
-                .code = WEB_REQUEST_STATUS_FAILED,
-                .message = strdup(curl_easy_strerror(result))
-            };
+            web_request_status *status = create_status(WEB_REQUEST_STATUS_FAILED, curl_easy_strerror(result));
             return status;
         }
     }
 
     CURL *client = curl_easy_init();
     if (client == nullptr) {
-        const web_request_status status = {
-            .code = WEB_REQUEST_STATUS_FAILED,
-            .message = nullptr
-        };
+        web_request_status *status = create_status(WEB_REQUEST_STATUS_FAILED, nullptr);
         return status;
     }
 
@@ -100,11 +91,8 @@ web_request_status web_request(const char *url, byte_array *buffer, const unsign
 
     const CURLcode result = curl_easy_perform(client);
     curl_easy_cleanup(client);
-    const web_request_status status = {
-        .code = result == CURLE_OK ? WEB_REQUEST_STATUS_SUCCESS :
-            (result == CURLE_URL_MALFORMAT ? WEB_REQUEST_STATUS_BAD_URL : WEB_REQUEST_STATUS_FAILED),
-        .message = message
-    };
+    web_request_status *status = create_status(result == CURLE_OK ? WEB_REQUEST_STATUS_SUCCESS :
+        (result == CURLE_URL_MALFORMAT ? WEB_REQUEST_STATUS_BAD_URL : WEB_REQUEST_STATUS_FAILED), message);
     return status;
 }
 

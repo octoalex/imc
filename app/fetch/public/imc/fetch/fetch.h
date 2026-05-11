@@ -35,7 +35,7 @@
 ///              May only be null if the resource's path is not null
 /// @return The status of the operation
 /// @note Currently, the only supported protocols are HTTP and HTTPS
-fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes);
+fetch_status *fetch(const resource *resource, byte_array *NULLABLE bytes);
 
 /// Downloads a file off of the internet and caches it, or gets it from the cache, and returns it as a JSON object
 /// @param resource The locations and metadata of the file to fetch
@@ -45,7 +45,7 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes);
 ///             May only be null if the resource's path is not null
 /// @return The status of the operation
 /// @note Currently, the only supported protocols are HTTP and HTTPS
-fetch_status fetch_json(const resource *resource, json_object *NULLABLE *json);
+fetch_status *fetch_json(const resource *resource, json_object *NULLABLE *json);
 
 /// Downloads a file off of the internet and caches it, or gets it from the cache, and returns it as a file
 /// @param resource The locations and metadata of the file to fetch
@@ -53,6 +53,6 @@ fetch_status fetch_json(const resource *resource, json_object *NULLABLE *json);
 ///             May only be null if the resource's path is not null
 /// @return The status of the operation
 /// @note Currently, the only supported protocols are HTTP and HTTPS
-fetch_status fetch_file(const resource *resource, FILE *NULLABLE *file);
+fetch_status *fetch_file(const resource *resource, FILE *NULLABLE *file);
 
 #endif //IMC_FETCH_H

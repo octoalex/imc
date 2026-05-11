@@ -54,7 +54,7 @@ constexpr unsigned long DEFAULT_TIMEOUT = 300'000;
 ///                If set to `< 0`, no timeout will be set
 /// @note Supports only HTTP and HTTPS
 /// @return The web request's status code
-web_request_status web_request(const char *url, byte_array *buffer, unsigned long timeout);
+web_request_status *web_request(const char *url, byte_array *buffer, unsigned long timeout);
 
 /// Performs necessary cleanup operations for web_request
 /// @note To be performed <b>only</b> after the last web request

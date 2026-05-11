@@ -42,12 +42,9 @@ const char *const ERROR_MESSAGE_BAD_RESOURCE = "The downloaded file does not mat
 
 static bool validate(const resource *resource, const byte_array *bytes);
 
-fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes) {
+fetch_status *fetch(const resource *resource, byte_array *NULLABLE bytes) {
     if (resource->path == nullptr && bytes == nullptr) {
-        const fetch_status status = {
-            .code = FETCH_STATUS_BAD_ARGUMENTS,
-            .message = strdup(ERROR_MESSAGE_BAD_ARRAY)
-        };
+        fetch_status *status = create_status(FETCH_STATUS_BAD_ARGUMENTS, ERROR_MESSAGE_BAD_ARRAY);
         return status;
     }
 
@@ -57,13 +54,9 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes) {
         const bool wr = can_write(resource->path);
         // cache exists, but is not writeable or readable, thus the operation should fail
         if (ex && (!re || !wr)) {
-            const fetch_status status = {
-                .code = FETCH_STATUS_CACHING_FAILED,
-                .message = strdup(
-                    !re && !wr ? ERROR_MESSAGE_NO_READ_WRITE_CACHE :
-                    !re ? ERROR_MESSAGE_NO_READ_CACHE : ERROR_MESSAGE_NO_WRITE_CACHE
-                )
-            };
+            fetch_status *status = create_status(FETCH_STATUS_CACHING_FAILED,
+                !re && !wr ? ERROR_MESSAGE_NO_READ_WRITE_CACHE :
+                !re ? ERROR_MESSAGE_NO_READ_CACHE : ERROR_MESSAGE_NO_WRITE_CACHE);
             if (bytes != nullptr) { *bytes = EMPTY_BYTE_ARRAY; }
             return status;
         }
@@ -76,10 +69,7 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes) {
             }
             // check if the directory was created
             if (!is_dir(parent)) {
-                const fetch_status status = {
-                    .code = FETCH_STATUS_CACHING_FAILED,
-                    .message = strdup(ERROR_MESSAGE_NO_DIRECTORY_CACHE)
-                };
+                fetch_status *status = create_status(FETCH_STATUS_CACHING_FAILED, ERROR_MESSAGE_NO_DIRECTORY_CACHE);
                 if (bytes != nullptr) { *bytes = EMPTY_BYTE_ARRAY; }
                 return status;
             }
@@ -101,7 +91,7 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes) {
                 } else {
                     free_byte_array(&buffer);
                 }
-                const fetch_status status = { .code = FETCH_STATUS_SUCCESS, .message = nullptr };
+                fetch_status *status = create_status(FETCH_STATUS_SUCCESS, nullptr);
                 return status;
             }
         }
@@ -111,23 +101,20 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes) {
     byte_array fallback = EMPTY_BYTE_ARRAY;
     byte_array *buffer = bytes != nullptr ? bytes : &fallback;
 
-    const web_request_status web_status = web_request(resource->url, buffer, DEFAULT_TIMEOUT);
+    web_request_status *web_status = web_request(resource->url, buffer, DEFAULT_TIMEOUT);
 
-    if (web_status.code != WEB_REQUEST_STATUS_SUCCESS) {
+    if (web_status->code != WEB_REQUEST_STATUS_SUCCESS) {
         free_byte_array(buffer);
-        const fetch_status status = {
-            .code = web_status.code == WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL ||
-                    web_status.code == WEB_REQUEST_STATUS_BAD_URL ?
-                FETCH_STATUS_BAD_ARGUMENTS : FETCH_STATUS_DOWNLOAD_FAILED
-        };
+        fetch_status *status = create_status(web_status->code == WEB_REQUEST_STATUS_UNSUPPORTED_PROTOCOL ||
+            web_status->code == WEB_REQUEST_STATUS_BAD_URL ? FETCH_STATUS_BAD_ARGUMENTS : FETCH_STATUS_DOWNLOAD_FAILED,
+            web_status->message);
+        free_status(web_status);
         return status;
     }
+    free_status(web_status);
 
     if (!validate(resource, buffer)) {
-        const fetch_status status = {
-            .code = FETCH_STATUS_BAD_RESOURCE,
-            .message = strdup(ERROR_MESSAGE_BAD_RESOURCE)
-        };
+        fetch_status *status = create_status(FETCH_STATUS_BAD_RESOURCE, ERROR_MESSAGE_BAD_RESOURCE);
         free_byte_array(buffer);
         return status;
     }
@@ -142,7 +129,7 @@ fetch_status fetch(const resource *resource, byte_array *NULLABLE bytes) {
     // if bytes == nullptr, then fallback will contain the bytes, so it's important to free it as to avoid a memory leak
     // if bytes != nullptr, then fallback will be empty, and freeing it is not an issue
     free_byte_array(&fallback);
-    const fetch_status status = { .code = FETCH_STATUS_SUCCESS, .message = nullptr };
+    fetch_status *status = create_status(FETCH_STATUS_SUCCESS, nullptr);
     return status;
 }
 
