@@ -64,6 +64,9 @@ status *create_status(const int code, const char *NULLABLE format, ...) {
 }
 
 void free_status(status *status) {
+    if (status == nullptr) {
+        return;
+    }
     if (!status->allocated_at_runtime) {
         struct status *err = create_status(
             STATUS_ERROR_CANNOT_FREE_NON_RUNTIME_STATUS.code,
